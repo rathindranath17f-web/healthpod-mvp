@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Pod — Investor Demo &amp; Product Navigator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F8F8;--panel:#FFF;--ink:#132320;--ink2:#3C4A46;--mut:#63726D;
+    --teal:#0B6E55;--tealtint:#E7F3EF;--tealline:#BFE0D5;
+    --navy:#1F3864;--navytint:#EAEFF6;
+    --gold:#8A6400;--goldtint:#FBF3DC;--rust:#8A2A24;--rusttint:#FBEDEC;
+    --term:#0C1614;--termgreen:#54E0A6;--termdim:#3F6E5E;
+    --line:#E1E8E6;--radius:14px;
+    --disp:'Space Grotesk',sans-serif;--body:'Inter',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+  /* tab bar */
+  header.top{position:sticky;top:0;z-index:60;background:rgba(246,248,248,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top-in{max-width:1180px;margin:0 auto;padding:11px 20px 0}
+  .brandrow{display:flex;align-items:center;gap:10px;padding-bottom:10px}
+  .brand{font-family:var(--disp);font-weight:700;font-size:18px;color:var(--navy);display:flex;align-items:center;gap:9px}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px var(--tealtint)}
+  .brandrow .meta{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .tabs{display:flex;gap:2px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+  .tabs button{flex:0 0 auto;font-family:var(--body);font-size:12.5px;font-weight:600;color:var(--ink2);background:none;border:none;border-bottom:2px solid transparent;padding:9px 12px;cursor:pointer;white-space:nowrap}
+  .tabs button:hover{color:var(--teal)}
+  .tabs button.on{color:var(--teal);border-bottom-color:var(--teal)}
+  .tabs button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px;border-radius:4px}
+
+  main{max-width:1180px;margin:0 auto;padding:34px 20px 70px}
+  .tab{display:none}.tab.active{display:block;animation:fade .3s}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:12px}
+  h1{font-family:var(--disp);font-weight:700;letter-spacing:-.03em;font-size:clamp(30px,5vw,50px);line-height:1.04;color:var(--navy)}
+  h2{font-family:var(--disp);font-weight:600;letter-spacing:-.02em;font-size:clamp(22px,3.1vw,31px);color:var(--navy);margin-bottom:8px}
+  h3{font-family:var(--disp);font-weight:600;font-size:17px;color:var(--ink)}
+  .lead{font-size:clamp(16px,2vw,19px);color:var(--ink2);max-width:74ch}
+  .sintro{color:var(--ink2);max-width:78ch;margin:6px 0 22px}
+  p.body{color:var(--ink2);max-width:76ch;margin-top:10px}
+  strong{color:var(--ink);font-weight:600}
+  .divider{height:1px;background:var(--line);margin:34px 0}
+
+  .grid{display:grid;gap:15px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:19px}
+  .card .n{font-family:var(--mono);font-size:11.5px;color:var(--teal);font-weight:600;letter-spacing:.05em}
+  .card h3{margin-top:5px}.card p{font-size:13.5px;color:var(--ink2);margin-top:7px}
+
+  .call{border-radius:var(--radius);padding:16px 18px;margin:18px 0;border-left:5px solid}
+  .call .cl{font-family:var(--disp);font-weight:600;font-size:14px;display:block;margin-bottom:3px}
+  .call p{font-size:14px}
+  .call.teal{background:var(--tealtint);border-color:var(--teal)}.call.teal .cl{color:var(--teal)}
+  .call.gold{background:var(--goldtint);border-color:var(--gold)}.call.gold .cl{color:var(--gold)}
+  .call.rust{background:var(--rusttint);border-color:var(--rust)}.call.rust .cl{color:var(--rust)}
+  .call.navy{background:var(--navytint);border-color:var(--navy)}.call.navy .cl{color:var(--navy)}
+
+  .eb{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
+  .eb.proven{background:var(--tealtint);color:var(--teal)}.eb.validate{background:var(--goldtint);color:var(--gold)}.eb.market{background:var(--navytint);color:var(--navy)}
+
+  .tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+  th{background:var(--navy);color:#fff;font-family:var(--disp);font-weight:600;font-size:12px;text-align:left;padding:10px 12px}
+  td{padding:10px 12px;border-top:1px solid var(--line);color:var(--ink2);vertical-align:top}
+  tr:nth-child(even) td{background:#FAFCFB}
+  td strong{color:var(--ink)}
+  tfoot td{background:var(--navytint)!important;font-weight:600;color:var(--navy);border-top:2px solid var(--navy)}
+  .chip{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px}
+  .chip.g{background:var(--tealtint);color:var(--teal)}.chip.a{background:var(--goldtint);color:var(--gold)}.chip.r{background:var(--rusttint);color:var(--rust)}
+
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .stat .v{font-family:var(--disp);font-weight:700;font-size:30px;color:var(--navy)}
+  .stat .l{font-size:12.5px;color:var(--mut);margin-top:2px}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding-top:22px;text-align:center}
+  footer p{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.8;max-width:84ch;margin:0 auto}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+  /* 3D navigator */
+  .navwrap{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+  @media(max-width:860px){.navwrap{grid-template-columns:1fr}}
+  .stage3d{position:relative;background:linear-gradient(160deg,#0E1C18,#0B1310);border-radius:16px;overflow:hidden;border:1px solid #16302a;aspect-ratio:4/3;min-height:340px}
+  #c3d{width:100%;height:100%;display:block;cursor:grab}#c3d:active{cursor:grabbing}
+  .stage3d .hint{position:absolute;left:14px;bottom:12px;font-family:var(--mono);font-size:11px;color:#5b7d70;pointer-events:none}
+  .stage3d .toolbar{position:absolute;top:12px;left:12px;display:flex;gap:7px}
+  .t3d{font-family:var(--mono);font-size:11px;font-weight:600;color:#cfeee0;background:#12251f;border:1px solid #23443a;padding:6px 10px;border-radius:8px;cursor:pointer}
+  .t3d:hover,.t3d.on{background:var(--teal);color:#031;border-color:var(--teal)}
+  .load3d{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:#5b7d70;text-align:center;padding:20px}
+  .complist{display:flex;flex-direction:column;gap:8px;max-height:440px;overflow-y:auto}
+  .comp{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 13px;cursor:pointer;transition:.15s;text-align:left;width:100%}
+  .comp:hover{border-color:var(--tealline)}
+  .comp.on{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal);background:var(--tealtint)}
+  .comp .idx{font-family:var(--mono);font-weight:600;font-size:12px;color:#fff;background:var(--navy);min-width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .comp.on .idx{background:var(--teal)}
+  .comp .cn{font-family:var(--disp);font-weight:600;font-size:14px;color:var(--ink)}
+  .comp .cd{font-size:12px;color:var(--ink2);margin-top:2px}
+  .compdetail{background:var(--panel);border:1px solid var(--tealline);border-radius:var(--radius);padding:18px;margin-top:14px}
+
+  /* simulator */
+  .sim{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 24px 50px -34px rgba(20,40,34,.28)}
+  .rail{display:flex;gap:8px;padding:14px 16px;background:#F0F5F3;border-bottom:1px solid var(--line);overflow-x:auto}
+  .revent{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding:6px 8px;border-radius:10px;min-width:70px;border:1px solid transparent}
+  .revent:hover{background:#fff}.revent.on{background:#fff;border-color:var(--tealline);box-shadow:0 0 0 1px var(--tealline)}
+  .revent .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:700;color:#fff;font-size:15px;position:relative}
+  .revent .tick{position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;border:2px solid #F0F5F3;color:#fff}
+  .revent .rn{font-size:11px;font-weight:600;color:var(--ink)}.revent .rr{font-size:9.5px;color:var(--mut)}
+  .stage{display:grid;grid-template-columns:1.15fr .85fr}
+  @media(max-width:800px){.stage{grid-template-columns:1fr}}
+  .device{background:linear-gradient(160deg,#0E1C18,#0B1310);padding:24px;color:#DFF7EC;position:relative;min-height:350px;display:flex;flex-direction:column}
+  .dev-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--termdim)}
+  .statuspill{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:9px 15px;border-radius:100px;font-family:var(--disp);font-weight:600;font-size:16px;align-self:flex-start;transition:.3s}
+  .statuspill .sd{width:10px;height:10px;border-radius:50%}
+  .devbody{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 0}
+  .toilet{width:130px;opacity:.9}
+  .devzone{margin-top:auto}
+  .siglist{display:flex;flex-direction:column;gap:8px}
+  .sig{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:12.5px;color:#CFEFE2}
+  .sig .sc{width:20px;height:20px;border-radius:50%;border:2px solid var(--termgreen);background:rgba(84,224,166,.12);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--termgreen)}
+  .readout{font-family:var(--mono);background:#0a120f;border:1px solid #1c352d;border-radius:11px;padding:13px 15px}
+  .rrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed #1f3c34}.rrow:last-child{border-bottom:none}
+  .rrow .rk{font-size:12px;color:#6f9c8c}.rrow .rv{font-size:16px;font-weight:600;color:#DFF7EC}
+  .rrow.fin .rk{color:var(--termgreen)}.rrow.fin .rv{font-size:22px;color:var(--termgreen)}
+  .water{display:flex;gap:10px;justify-content:center;padding:6px 0}
+  .drop{width:5px;height:20px;border-radius:3px;background:var(--termgreen);opacity:.5;animation:fall 1.1s infinite}
+  .drop:nth-child(2){animation-delay:.2s}.drop:nth-child(3){animation-delay:.4s}.drop:nth-child(4){animation-delay:.15s}.drop:nth-child(5){animation-delay:.35s}
+  @keyframes fall{0%{transform:translateY(-7px);opacity:.2}50%{opacity:.8}100%{transform:translateY(7px);opacity:.2}}
+  .devnote{font-family:var(--mono);font-size:11.5px;color:#6f9c8c;margin-top:10px;line-height:1.5}
+  .phonewrap{background:#EEF3F1;display:flex;align-items:center;justify-content:center;padding:24px}
+  .phone{width:220px;background:#0C1614;border-radius:26px;padding:11px;border:1px solid #1c352d;box-shadow:0 20px 40px -18px rgba(20,40,34,.4)}
+  .pscreen{background:#F7FAF9;border-radius:18px;min-height:380px;padding:16px 15px;display:flex;flex-direction:column}
+  .pnotch{width:64px;height:5px;background:#2c5648;border-radius:100px;margin:2px auto 12px}
+  .papp{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--navy);display:flex;align-items:center;gap:7px}
+  .papp .pd{width:9px;height:9px;border-radius:50%;background:var(--teal)}
+  .pbody{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:9px}
+  .pname{font-family:var(--disp);font-weight:600;font-size:17px;color:var(--ink)}.pmut{font-size:12px;color:var(--mut)}
+  .pspin{width:42px;height:42px;border-radius:50%;border:4px solid var(--tealtint);border-top-color:var(--teal);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .presultcard{width:100%;background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;text-align:left}
+  .pmarker{font-family:var(--mono);font-size:10.5px;color:var(--teal);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .pval{font-family:var(--disp);font-weight:700;font-size:28px;color:var(--navy);margin:2px 0}
+  .pstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:100px;margin-top:6px}
+  .ps-ok{background:var(--tealtint);color:var(--teal)}.ps-alert{background:var(--rusttint);color:var(--rust)}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:11px}
+  .spark span{flex:1;background:var(--tealline);border-radius:2px}.spark span.hi{background:var(--teal)}
+  .picon{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
+  .narr{padding:18px 20px;border-top:1px solid var(--line);background:#fff}
+  .narrmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+  .phase{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);background:var(--tealtint);padding:3px 9px;border-radius:100px}
+  .stepcount{font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .narr h3{font-size:18px;margin-bottom:4px}.narr p{font-size:14px;color:var(--ink2);max-width:76ch}
+  .controls{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .btn{font-family:var(--disp);font-weight:600;font-size:14px;padding:9px 17px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .btn:hover{border-color:var(--teal);color:var(--teal)}.btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.btn.primary:hover{filter:brightness(1.06);color:#fff}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.play{margin-left:auto;background:var(--navy);color:#fff;border-color:var(--navy)}.btn.play:hover{color:#fff;filter:brightness(1.1)}
+  .progressbar{height:5px;background:var(--line);border-radius:100px;overflow:hidden;margin-top:12px}
+  .progressbar .pf{height:100%;width:0;background:var(--teal);border-radius:100px;transition:width .25s}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brandrow">
+      <div class="brand"><span class="dot"></span>Health Pod</div>
+      <div class="meta">Investor demo · BPP Group 8 · Section F · EPGP Batch 17</div>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+  </div>
+</header>
+<main id="main">
+
+<!-- ===== TAB 1: PITCH ===== -->
+<section class="tab active" data-title="The Health Pod — Intro" id="t-pitch">
+  <div class="eyebrow">The Health Pod · Introduction</div>
+  <h1>Your bathroom already sees you every day. It should be checking on your health.</h1>
+  <p class="lead" style="margin-top:16px">Health Pod is a diagnostic commode that replaces the normal toilet and runs a passive daily urine test, then reports a real clinical result to a phone. No strips, no clinic queue, no daily effort. It turns a fixture every household already uses into an early-warning health check.</p>
+
+  <div class="grid g4" style="margin-top:26px">
+    <div class="stat"><div class="v">101M</div><div class="l">people with diabetes in India</div></div>
+    <div class="stat"><div class="v">Daily</div><div class="l">passive test, zero effort</div></div>
+    <div class="stat"><div class="v">~28</div><div class="l">markers across tiers (10 at launch)</div></div>
+    <div class="stat"><div class="v">Cartridge</div><div class="l">recurring revenue engine</div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:24px">
+    <div class="card"><div class="n">WHAT WE ARE DOING</div><h3>Passive daily diagnostics, built into the toilet</h3><p>A full-commode device that samples once a day, measures urine markers electrochemically, corrects for dilution, and shows a simple trend and status in an app. Institutions first, then homes.</p></div>
+    <div class="card"><div class="n">WHY IT MATTERS</div><h3>Most chronic disease is caught late</h3><p>India carries a very large non-communicable disease burden, and screening is infrequent because it needs effort and clinics. A frictionless daily check that people never have to think about is infrastructure, not a gadget.</p></div>
+    <div class="card"><div class="n">WHAT MOTIVATES US</div><h3>Make the earliest signal the easiest to get</h3><p>The earliest signs of kidney stress, diabetes control and infection often show in urine. If catching them costs the user nothing, more people catch them in time. That is the whole point of the product.</p></div>
+    <div class="card"><div class="n">THE TECHNOLOGY</div><h3>Molecular sensing, corrected for dilution</h3><p>Electrochemical measurement gives quantified values, not colour categories. A specific-gravity reading corrects each result for how diluted the bowl sample is. That correction is the core advantage no optical rival has.</p></div>
+  </div>
+
+  <div class="call navy"><span class="cl">The research this stands on</span><p>The concept builds on published, peer-reviewed work on passive toilet-based diagnostics, including a Stanford study in Nature Biomedical Engineering that demonstrated the scientific feasibility of the approach. Electrochemical biosensing and specific-gravity dilution correction are established methods. We are combining proven science in a new form, not inventing unproven physics.</p></div>
+
+  <div class="divider"></div>
+  <h2>Under the hood: what actually happens in the backend</h2>
+  <p class="sintro">For the technical reader. This is the real signal chain, end to end, from a drop of urine to a number on a phone. Every stage below uses established methods; where a term is unavoidable it is explained in plain words.</p>
+
+  <div class="grid g2">
+    <div class="card"><div class="n">STAGE 1 · THE SENSING ELEMENT</div><h3 style="margin-top:5px">Electrochemistry turns a molecule into a current</h3><p>The cartridge holds a small three-electrode cell (working, counter, reference). For a marker like glucose, an enzyme on the working electrode (glucose oxidase) reacts with it and releases electrons. That produces a tiny electrical current proportional to how much glucose is present. This is amperometry, the same principle as a handheld glucometer. Markers like pH use a potential difference instead (potentiometry). A few markers still use a reagent pad read by a light sensor, the same chemistry as a dipstick, read by the machine rather than the eye.</p></div>
+
+    <div class="card"><div class="n">STAGE 2 · THE ANALOG FRONT END</div><h3 style="margin-top:5px">A clean signal, then a number</h3><p>The raw current is in the microamp range, so an analog front-end amplifies it, filters out noise, and an analog-to-digital converter turns it into a digital value the microcontroller can use. Temperature is measured at the same time, because reaction rates drift with temperature, and the reading is compensated for it. Nothing here is exotic; these are standard biosensor electronics.</p></div>
+
+    <div class="card"><div class="n">STAGE 3 · CALIBRATION</div><h3 style="margin-top:5px">The cartridge carries its own calibration</h3><p>Each cartridge batch is factory-calibrated: the relationship between current and concentration (the calibration curve) is measured and stored on the cartridge's authentication chip. When the device reads a cartridge, it loads that curve, so it converts the current to a real concentration accurately, and it knows the cartridge is genuine and which tier it unlocks. This is how one hardware base becomes Lite, Pro or Max by cartridge alone.</p></div>
+
+    <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n" style="color:var(--teal)">STAGE 4 · THE DILUTION CORRECTION (the moat)</div><h3 style="margin-top:5px">Normalise for how watered-down the sample is</h3><p>A bowl sample is diluted by residual water, so the concentration reads low. The device measures the sample's specific gravity (its density versus water), which tells it the dilution factor. The correction is simple arithmetic: corrected value = raw value × dilution factor. Clinical labs already normalise urine this way (often to creatinine). Doing it in situ, at the moment of reading, is the part rivals do not have.</p></div>
+
+    <div class="card"><div class="n">STAGE 5 · IDENTITY FUSION</div><h3 style="margin-top:5px">Three weak signals combined into one confident decision</h3><p>The device does not use one sign of identity, it fuses three. Bluetooth signal strength from a registered phone gives proximity. A learned per-user model of weight and time-of-day gives a behavioural match. A rough biochemical baseline (for example the person's usual creatinine and specific-gravity signature) gives a chemical match. Each produces a confidence score; the scores are combined, and only if the total clears a threshold is the reading attributed to that person. Below the threshold it is marked unverified and never scored. This is standard sensor fusion, the same idea a phone uses to decide it is really you.</p></div>
+
+    <div class="card"><div class="n">STAGE 6 · EDGE THEN CLOUD</div><h3 style="margin-top:5px">The device does the fast part, the cloud does the smart part</h3><p>The on-device microcontroller handles acquisition, calibration, temperature and dilution correction, and a first-pass in-range check, so it works even before it syncs. The corrected, identified reading is then sent encrypted to the cloud, which attaches it to the person's trend, runs the scoring model, checks thresholds, and drives the app and the physician dashboard. Data handling is built to be DPDP-compliant, and only consented data ever leaves the device.</p></div>
+
+    <div class="card"><div class="n">STAGE 7 · THE CLEANING CONTROL LOOP</div><h3 style="margin-top:5px">Actuate, flush, then verify before re-arming</h3><p>After each use the controller drives a micro-pump and valves to run a water-jet rinse and a channel flush. A verification sensor then reads the cleaned channel against a clean baseline. Only when that check passes does the device re-arm to accept the next person. It is a closed control loop: act, measure, confirm, proceed.</p></div>
+
+    <div class="card"><div class="n">THE WHOLE PIPELINE, IN ONE LINE</div><h3 style="margin-top:5px">Sample to score</h3><p>Sample → electrode reaction → amplify and digitise → apply cartridge calibration and temperature compensation → correct for dilution → fuse identity → edge first-pass → encrypted sync → cloud trend, threshold and alert → app and physician view. Every arrow in that chain is an established, buildable step.</p></div>
+  </div>
+
+  <div class="call gold"><span class="cl">Honest technical note</span><p>The individual stages are all proven and commercial. The engineering work that remains is making them perform together inside a toilet: repeatability under 10 percent, detection limits below clinical thresholds after dilution, correction accuracy against lab references, and reliable identity fusion in a real household. These are validation tasks, listed on the Validation tab, not open research questions.</p></div>
+
+  <div class="call teal"><span class="cl">The ask, in one line</span><p>A phase-gated raise: seed to launch the Lite variant and run an institutional pilot that generates clinical evidence, then Series A and B to add tiers and scale. The business earns on the recurring cartridge, not the hardware.</p></div>
+</section>
+
+<!-- ===== TAB: WHY INVEST ===== -->
+<section class="tab" data-title="Why invest" id="t-why">
+  <div class="eyebrow">Why invest, and how feasible this is</div>
+  <h2>The case in six honest points</h2>
+  <p class="sintro">No hype. Here is why this is worth backing and why it can actually be built, with the proof for each claim and the risk stated next to it.</p>
+
+  <div class="grid g2">
+    <div class="card"><div class="n">1 · THE PROBLEM IS HUGE AND GROWING</div><h3 style="margin-top:5px">Chronic disease, caught too late</h3><p>India has one of the world's largest diabetes and kidney-disease burdens, and screening is rare because it takes effort and a clinic. A test that costs the user nothing to take, every day, reaches people that annual check-ups miss.</p></div>
+    <div class="card"><div class="n">2 · WHY NOW</div><h3 style="margin-top:5px">The pieces finally exist</h3><p>Cheap electrochemical sensors, reliable home connectivity, and Indian medical-device manufacturing under Make-in-India all exist today. The science was proven by Stanford in a peer-reviewed journal. Nothing here waits on a breakthrough.</p></div>
+    <div class="card"><div class="n">3 · THE MOAT IS REAL</div><h3 style="margin-top:5px">Molecular, corrected for dilution</h3><p>Every rival reads colour. We measure molecules and correct for how diluted the sample is. Copying that means new hardware, new chemistry and a new regulatory path, an estimated three-to-five-year effort. Four inventions are ours to patent.</p></div>
+    <div class="card"><div class="n">4 · THE BUSINESS EARNS ON REPEAT</div><h3 style="margin-top:5px">Razor and blade, medical-grade</h3><p>The device is sold near cost. The cartridge, bought every month at roughly 58% margin, is the engine. Recurring revenue per active device is the part investors value most, and it compounds as the base grows.</p></div>
+    <div class="card"><div class="n">5 · A CREDIBLE FIRST MARKET</div><h3 style="margin-top:5px">Institutions before homes</h3><p>Hospitals and elder-care feel the pain, pay on contract, and generate the clinical evidence that unlocks the consumer market. This is the professor's model and it de-risks the launch.</p></div>
+    <div class="card"><div class="n">6 · MONEY IS SPENT IN STAGES</div><h3 style="margin-top:5px">Phase-gated, low blind risk</h3><p>Seed money proves the science in a pilot before big spend. Each round unlocks only after the prior milestone is hit, so capital is never committed to an unproven step.</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <h2>How feasible, really</h2>
+  <p class="sintro">Feasibility is not a feeling, it is a checklist. Here is the honest split between what already works and what we still have to prove, with the risk and the mitigation for each open item.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Question an investor asks</th><th>Honest answer</th><th>Risk &amp; mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Does the core science work?</td><td><span class="chip g">Yes, proven</span> Electrochemical urine sensing and specific-gravity dilution correction are established, commercial methods.</td><td>Low risk. We apply known science, not new physics.</td></tr>
+      <tr><td>Can it be built in India at cost?</td><td><span class="chip g">Yes</span> Every part has a named Indian supplier: ceramic, cartridge lines, electronics.</td><td>Low risk. Real quotes still needed; that is the cost worksheet's job.</td></tr>
+      <tr><td>Will the readings be accurate enough?</td><td><span class="chip a">To be proven</span> Accuracy in a real bowl must be validated against lab references.</td><td>Medium risk. Mitigation: a bench partnership (IISc or IIT Madras) before scale.</td></tr>
+      <tr><td>Can it tell family members apart?</td><td><span class="chip a">To be proven</span> The three-signal method is sound and used elsewhere.</td><td>Medium risk. Mitigation: pilot testing in real households, plus flag-and-skip when unsure.</td></tr>
+      <tr><td>Is it hygienic between users?</td><td><span class="chip a">To be proven</span> Rinse, flush and verify is a firm design.</td><td>Medium risk. Mitigation: prove zero carry-over in lab testing.</td></tr>
+      <tr><td>Is it legal to sell?</td><td><span class="chip a">In progress</span> CDSCO pathway mapped; India-specific clinical evaluation is mandatory.</td><td>Managed risk. Mitigation: regulatory built into the funded plan and timeline.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">The honest bottom line</span><p>The science is proven and the parts exist, so this is an engineering and validation effort, not a research gamble. The open items are all ordinary, testable, and funded in stages. That is exactly the risk profile a disciplined investor wants: real upside, and the unknowns are known, bounded, and being closed.</p></div>
+</section>
+
+<!-- ===== TAB 2: 3D NAVIGATOR ===== -->
+<section class="tab" data-title="3D Navigator" id="t-3d">
+  <div class="eyebrow">3D product navigator</div>
+  <h2>Explore the product, part by part</h2>
+  <p class="sintro">Drag to rotate. Use Explode to separate the parts, and tap any component in the list to highlight it and read what it does and why it is there. Each part is tagged by how proven it is.</p>
+  <div class="navwrap">
+    <div class="stage3d">
+      <div class="load3d" id="load3d">Loading 3D model. This needs a connection the first time.</div>
+      <canvas id="c3d"></canvas>
+      <div class="toolbar">
+        <button class="t3d on" id="btnRot">◐ Rotate</button>
+        <button class="t3d" id="btnExplode">▤ Explode</button>
+        <button class="t3d" id="btnReset">⟲ Reset</button>
+      </div>
+      <div class="hint">drag to rotate · scroll to zoom</div>
+    </div>
+    <div>
+      <div class="complist" id="complist"></div>
+    </div>
+  </div>
+  <div class="compdetail" id="compDetail">
+    <div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">TAP A COMPONENT</div>
+    <h3 style="margin-top:5px">The parts that make it a diagnostic device</h3>
+    <p class="body" style="margin-top:6px">A normal commode plus four things: a sealed sample zone, a sensor-and-cartridge module, a dilution sensor, and a self-cleaning system, all run by a small controller. Tap any part above to see its role.</p>
+  </div>
+  <div class="call gold" style="margin-top:16px"><span class="cl">Honest note</span><p>This is a demo model of the layout, not the final industrial design or a scan of a built unit. It is here to make the parts and their jobs clear.</p></div>
+</section>
+
+<!-- ===== TAB 3: ARCHITECTURE ===== -->
+<section class="tab" data-title="Architecture" id="t-arch">
+  <div class="eyebrow">Architecture, technical documentation and feasibility</div>
+  <h2>How it works, in plain terms</h2>
+  <p class="sintro">The whole design rests on one choice: measure molecules electrochemically and correct them for dilution, instead of reading colour with a camera. Everything else follows from that. Each layer below is tagged by how proven it is, so nothing reads as a claim it has not earned.</p>
+
+  <div class="call navy"><span class="cl">First, the simplest version</span><p>Think of the strip a diabetic dips in urine, or the sensor in a glucometer. Health Pod does the same kind of chemistry, but automatically, inside the toilet, once a day, and it fixes one problem those strips cannot: urine in a bowl is watered down, so the raw number looks too low. Health Pod measures how watered-down the sample is and corrects the number back to the true value. That correction is the clever part, and it is why our reading is trustworthy and a colour-strip is not.</p></div>
+
+  <h3 style="margin:6px 0 10px">How it works, in five everyday steps</h3>
+  <div class="grid g3" style="margin-bottom:8px">
+    <div class="card"><div class="n">STEP 1</div><h3 style="margin-top:4px">A tiny sample is taken</h3><p>Once a day, a small amount of urine is drawn into a sealed channel, not the open bowl. Like a lab taking a drop, but automatic.</p></div>
+    <div class="card"><div class="n">STEP 2</div><h3 style="margin-top:4px">The cartridge reacts</h3><p>The sample touches sensor pads in a replaceable cartridge. Each pad reacts to one marker, the same idea as a test strip, but read by the machine.</p></div>
+    <div class="card"><div class="n">STEP 3</div><h3 style="margin-top:4px">It reads a number</h3><p>The device turns each reaction into a real number, not a colour. This is the difference between "looks a bit dark" and "5.4".</p></div>
+    <div class="card"><div class="n">STEP 4</div><h3 style="margin-top:4px">It corrects for water</h3><p>It measures how diluted the sample is and adjusts the number up to the true value. This is the step no rival has.</p></div>
+    <div class="card"><div class="n">STEP 5</div><h3 style="margin-top:4px">The phone shows it</h3><p>A simple in-range or out-of-range status and a trend appear in the app. A doctor is alerted only if something crosses a line.</p></div>
+    <div class="card" style="background:var(--tealtint);border-color:var(--tealline)"><div class="n" style="color:var(--teal)">THE CARTRIDGE IDEA</div><h3 style="margin-top:4px">Like ink in a printer</h3><p>The printer is cheap; the ink is where the business is. Here the toilet is near cost; the monthly cartridge earns. It also unlocks which tests you get.</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="margin-bottom:10px">The same thing, in four technical layers</h3>
+  <div class="grid g2">
+    <div class="card"><div class="n">LAYER 1 · SENSING</div><h3>Electrochemical array <span class="eb proven">Proven chemistry</span></h3><p>An electrode array with enzyme and reagent pads in the cartridge reacts with the sample and produces a quantified value per marker. Enzyme glucose sensing is the most validated biosensor format there is.</p></div>
+    <div class="card"><div class="n">LAYER 2 · CORRECTION</div><h3>Dilution normalisation <span class="eb validate">Prove in-bowl</span></h3><p>A specific-gravity reading taken at the same moment corrects for how diluted the bowl sample is. The method is standard lab practice; proving it inside a toilet is the engineering to do.</p></div>
+    <div class="card"><div class="n">LAYER 3 · READER</div><h3>Controller and self-clean <span class="eb proven">Standard parts</span></h3><p>Sealed electronics, a low-power microcontroller, Wi-Fi and BLE, and the cleaning system. No exotic parts, which is why India-first manufacture is realistic.</p></div>
+    <div class="card"><div class="n">LAYER 4 · INTELLIGENCE</div><h3>App and cloud AI <span class="eb proven">Established</span></h3><p>Turns raw readings into a daily trend score with a physician dashboard. This is what users subscribe to. Raw output alone is not the product; the monitored trend is.</p></div>
+  </div>
+  <div class="divider"></div>
+  <h2>Feasibility check, done honestly</h2>
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--tealline)"><h3 style="color:var(--teal)">Already proven <span class="eb proven">Exists today</span></h3>
+      <p class="body">Electrochemical urine sensing is mature and commercial. Specific-gravity dilution correction is standard lab practice. Passive identification by proximity, pattern and biometrics exists in other health devices. None of this is speculative.</p></div>
+    <div class="card" style="border-color:#E7D6A6"><h3 style="color:var(--gold)">Must be proven <span class="eb validate">Our work ahead</span></h3>
+      <p class="body">Repeatability under 10 percent in the bowl, detection limits below clinical thresholds after dilution, correction accuracy against lab references, zero carry-over after cleaning, and interference from vitamin C and cleaning agents. All ordinary engineering tasks, not fantasies.</p></div>
+  </div>
+  <div class="call teal"><span class="cl">How it gets validated</span><p>A bench validation partnership with an institution such as IISc Bangalore or IIT Madras, then a hospital pilot through the Institutional tier to confirm real-world performance. That pilot doubles as the clinical evidence buyers say they need.</p></div>
+  <div class="call rust"><span class="cl">The one thing we will not claim</span><p>No accuracy figure is certified until this validation is done. Everything is labelled by evidence level so the design holds up when it is questioned.</p></div>
+</section>
+
+<!-- ===== TAB 4: BIOMARKERS ===== -->
+<section class="tab" data-title="Biomarkers" id="t-bio">
+  <div class="eyebrow">What the first variant tests</div>
+  <h2>The MVP: a ten-marker urine panel</h2>
+  <p class="sintro">Health Pod Lite runs a standard ten-parameter urine screen, the same set a clinical dipstick covers, measured by the device and corrected for dilution. Specific gravity is both a marker and the reference used to correct the others.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Glucose <span class="eb proven">Electrochemical</span></h3><p>Screens for diabetes and blood-sugar control. The most validated biosensor marker there is.</p></div>
+    <div class="card"><h3>Protein / albumin <span class="eb validate">Reagent pad</span></h3><p>An early sign of kidney stress, important given India's diabetes and hypertension burden.</p></div>
+    <div class="card"><h3>Specific gravity <span class="eb proven">Reference</span></h3><p>Hydration level, and the dilution reference that makes every other reading trustworthy.</p></div>
+    <div class="card"><h3>pH <span class="eb proven">Electrochemical</span></h3><p>Metabolic and urinary-tract indicator; also flags risk of certain stones.</p></div>
+    <div class="card"><h3>Ketones <span class="eb validate">Reagent pad</span></h3><p>Shows fat-burning metabolic state, relevant to diabetes and fasting.</p></div>
+    <div class="card"><h3>Leukocytes <span class="eb validate">Reagent pad</span></h3><p>White blood cells, a marker of possible urinary-tract infection.</p></div>
+    <div class="card"><h3>Nitrite <span class="eb validate">Reagent pad</span></h3><p>Points to bacterial infection in the urinary tract.</p></div>
+    <div class="card"><h3>Blood (occult) <span class="eb validate">Reagent pad</span></h3><p>Hidden blood, an early flag for kidney or urinary-tract issues.</p></div>
+    <div class="card"><h3>Bilirubin <span class="eb validate">Reagent pad</span></h3><p>A liver-function indicator.</p></div>
+    <div class="card"><h3>Urobilinogen <span class="eb validate">Reagent pad</span></h3><p>A second liver-and-bile indicator, read alongside bilirubin.</p></div>
+  </div>
+  <div class="call gold"><span class="cl">Honest note on method</span><p>Glucose, pH and specific gravity are the strongest electrochemical reads and carry the dilution-correction advantage. Several others start as reagent-pad reads, the same chemistry a dipstick uses, read by the device instead of by eye. Moving more of them to fully quantified electrochemical detection is validation work, not something claimed as finished.</p></div>
+</section>
+
+<!-- ===== TAB 5: SIMULATOR ===== -->
+<section class="tab" data-title="Simulator" id="t-sim">
+  <div class="eyebrow">Step-by-step simulator</div>
+  <h2>One morning, five people, step by step</h2>
+  <p class="sintro">Press Next to walk through a real morning, one moment at a time. The left panel is the toilet, the right is the user's phone, and they update together. The rail shows the seven events; click any to jump. It proves who is tested, who is not, and how the device decides.</p>
+  <div class="sim">
+    <div class="rail" id="rail" role="tablist" aria-label="Morning events"></div>
+    <div class="stage">
+      <div class="device">
+        <div class="dev-top"><span>Health Pod · in the bathroom</span><span id="devClock">06:40</span></div>
+        <div class="statuspill" id="statusPill"><span class="sd"></span><span id="statusText">Ready</span></div>
+        <div class="devbody">
+          <svg class="toilet" viewBox="0 0 120 120" aria-hidden="true">
+            <rect x="34" y="10" width="52" height="26" rx="4" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+            <ellipse cx="60" cy="66" rx="34" ry="22" fill="none" stroke="#2c5648" stroke-width="3"/>
+            <ellipse cx="60" cy="66" rx="22" ry="13" fill="#0a120f" stroke="#1c352d" stroke-width="2"/>
+            <path d="M40 86 L80 86 L74 108 L46 108 Z" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="devzone" id="devZone"></div>
+        <div class="devnote" id="devNote"></div>
+      </div>
+      <div class="phonewrap">
+        <div class="phone"><div class="pscreen">
+          <div class="pnotch"></div>
+          <div class="papp"><span class="pd"></span>Health Pod</div>
+          <div class="pbody" id="pbody"></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="narr">
+      <div class="narrmeta">
+        <span class="phase" id="phaseTag">Approach</span>
+        <span class="stepcount" id="stepCount">Event 1 of 7 · step 1 of 8</span>
+      </div>
+      <h3 id="narrTitle">Anil walks in</h3>
+      <p id="narrText">Text</p>
+      <div class="controls">
+        <button class="btn" id="backBtn">◀ Back</button>
+        <button class="btn primary" id="nextBtn">Next ▶</button>
+        <button class="btn play" id="playBtn">▶ Auto-play</button>
+      </div>
+      <div class="progressbar"><div class="pf" id="progFill"></div></div>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="card"><div class="n">CASE · OPTED OUT</div><h3 style="margin-top:5px">Recognised, left alone</h3><p>Priya turned testing off. The device recognises her and does nothing. No sample, no reading. One tap turns it back on. This is the restriction, made concrete.</p></div>
+    <div class="card"><div class="n">CASE · GUEST</div><h3 style="margin-top:5px">Never tested</h3><p>A visitor matches no profile, so the device treats them as a guest and never tests them. Testing stays limited to people who registered and opted in.</p></div>
+  </div>
+</section>
+
+<!-- ===== TAB 6: SURVEY ===== -->
+<section class="tab" data-title="Survey" id="t-survey">
+  <div class="eyebrow">Market survey and how we responded</div>
+  <h2>What the survey told us, and what we changed</h2>
+  <p class="sintro">We ran a primary survey of prospective users, mostly metro households, plus institutional conversations. The findings shaped the go-to-market, the pricing and the evidence plan. Here is each finding and the concrete response.</p>
+  <div class="grid g4" style="margin-bottom:20px">
+    <div class="stat"><div class="v">52</div><div class="l">survey respondents</div></div>
+    <div class="stat"><div class="v">87%</div><div class="l">metro households</div></div>
+    <div class="stat"><div class="v">71%</div><div class="l">buy only if clinically validated</div></div>
+    <div class="stat"><div class="v">&lt;₹50k</div><div class="l">price most expect</div></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Survey finding</th><th>What it means</th><th>How we addressed it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>71% would buy only if clinically validated</strong></td><td>Trust is the real barrier, not interest</td><td>Institutional-first go-to-market. The hospital pilot generates the clinical evidence before any wide consumer push. Validation is the plan, not an afterthought.</td></tr>
+      <tr><td><strong>Most expect the device under ₹50,000</strong></td><td>Price sensitivity is high</td><td>Aggressive hardware pricing at ₹55k–75k on a thin margin, with the cartridge carrying profit. A lower-cost clip-on option is kept for budget buyers. The gap to ₹50k is flagged honestly, not hidden.</td></tr>
+      <tr><td><strong>31% held back by uncertainty about the technology</strong></td><td>People do not understand or trust the tech yet</td><td>Plain-language results, a visible dilution-correction step, and physician involvement in the loop. The simulator and this demo exist partly to remove that uncertainty.</td></tr>
+      <tr><td><strong>Strong interest from elder-care and clinics</strong></td><td>Institutions feel the pain most</td><td>Institutional tier is the launch wedge: lease pricing, ward mode, and an annual contract. This matches the professor's B2B2C-first revenue model.</td></tr>
+      <tr><td><strong>Privacy raised repeatedly</strong></td><td>A shared health device worries people</td><td>Private by default, passive identification, guests never tested, and DPDP-compliant data handling. The whole identity design answers this.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">The through-line</span><p>The survey pushed us away from a consumer-gadget launch and toward institutions first, where the clinical evidence gets built and the price sensitivity is lower. That single shift answers the two biggest findings at once.</p></div>
+</section>
+
+<!-- ===== TAB 7: TEAM FEEDBACK ===== -->
+<section class="tab" data-title="Team feedback" id="t-team">
+  <div class="eyebrow">Team feedback</div>
+  <h2>Every team point, logged and addressed</h2>
+  <p class="sintro">Each point raised inside the team, with how the current full-commode design answers it.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Raised by</th><th>The point</th><th>How it is addressed</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Deepak</td><td>Identify which household member is being tested</td><td>Three-signal passive identification: phone proximity, weight-and-time pattern, biochemical fingerprint. Conflicts are flagged unverified and not scored.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Somnath</td><td>Use replaceable cartridges; sensor and cartridge cost is the main risk</td><td>Cartridge is the consumable and the tier-unlock. Its cost is flagged as the top COGS item to validate with real quotes in the cost model.</td><td><span class="chip a">In progress</span></td></tr>
+      <tr><td>Utkarsh</td><td>SaaS logic unclear; unit economics; alert fatigue</td><td>Three-layer model spelled out; ambient-by-default alerts fire only on a threshold breach; unit costs marked as targets pending quotes.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Utkarsh</td><td>Consider a global niche and stronger edge AI</td><td>India-first retained and defended for market size and Make-in-India funding; edge AI included as on-device first-pass scoring.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Raghuraj</td><td>Are we copying anyone? Is the tech ready?</td><td>The Innovation and Patents tab answers copying directly; feasibility is split by evidence level with a named validation route.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Surajit</td><td>Contamination and hygiene between users</td><td>Water-jet rinse and channel flush after every use, then a verification check before the next sample.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Shashank</td><td>Keep deliverables standalone and shareable</td><td>This demo is a single self-contained file, plain language, shareable as-is.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>Mentor</td><td>Find local Indian alternatives to lower cost</td><td>Supplier list is India-first across ceramic, cartridge and electronics, lowering cost and import-duty exposure.</td><td><span class="chip a">In progress</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ===== TAB 8: PROFESSOR FEEDBACK ===== -->
+<section class="tab" data-title="Professor feedback" id="t-prof">
+  <div class="eyebrow">Professor feedback</div>
+  <h2>The professor's five points, addressed honestly</h2>
+  <p class="sintro">Design decisions are marked addressed; items that depend on external partners or regulators are marked in progress, not overstated.</p>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>The point</th><th>How it is addressed</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>P1</td><td>Privacy and user identification</td><td>Private by default, opt-in modes, passive three-signal identification, guests never tested through consent-gated activation.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>P2</td><td>Regulatory pathway</td><td>Mapped to CDSCO: Lite as Class B, Pro and Max as Class C. The 2025 rules make India-specific clinical evaluation mandatory even with FDA or CE approval, so no waiver route is assumed. This corrects an earlier waiver idea.</td><td><span class="chip a">In progress</span></td></tr>
+      <tr><td>P3</td><td>Cartridge frequency and cost</td><td>Testing is scheduled once a day, not on every use, which protects the cartridge and avoids meaningless repeats.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>P4</td><td>Auto-clean and contamination</td><td>Water-jet rinse plus channel flush after every use, with a verification check. Also a patent candidate.</td><td><span class="chip g">Addressed</span></td></tr>
+      <tr><td>P5</td><td>Funding (BIRAC, Make-in-India, strategic partners)</td><td>Sequenced funding: non-dilutive grants first, then strategic equity or royalty. India-first sourcing supports the Make-in-India narrative.</td><td><span class="chip a">In progress</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="call navy"><span class="cl">The professor's steer, in one line</span><p>Lead with institutions, prove it clinically, fund it non-dilutively first, and treat the cartridge as the business. The whole plan now reflects that.</p></div>
+</section>
+
+<!-- ===== TAB 9: COST MODEL ===== -->
+<section class="tab" data-title="Cost model" id="t-cost">
+  <div class="eyebrow">Granular cost breakdown</div>
+  <h2>Every component, with the reason it is in the cost</h2>
+  <p class="sintro">A full component list so the numbers can be built up properly. Every line has a reason it belongs. All figures are tentative, indicative of moderate scale, and meant to be replaced with real quotes. A separate editable spreadsheet accompanies this.</p>
+  <div class="call rust"><span class="cl">Read first</span><p>These are placeholders for completeness, not a validated budget. The point is that no cost category is forgotten.</p></div>
+
+  <h3 style="margin:18px 0 8px">A · Hardware bill of materials (per commode)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Component</th><th>Why it is in the cost</th><th>Tentative / unit</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ceramic body + glaze</strong></td><td>The physical product; houses every subsystem</td><td>₹3,500–5,000</td></tr>
+      <tr><td>Seat, lid, soft-close hinges</td><td>Makes it a usable toilet</td><td>₹600–900</td></tr>
+      <tr><td>In-bowl sensor module housing</td><td>Holds sensor and cartridge in the sample zone</td><td>₹800–1,200</td></tr>
+      <tr><td>Cartridge dock + reader interface</td><td>Reads cartridge; drives tier unlock</td><td>₹700–1,100</td></tr>
+      <tr><td>Main PCB + microcontroller</td><td>Runs cycle logic, cleaning, edge scoring</td><td>₹900–1,400</td></tr>
+      <tr><td>Connectivity (Wi-Fi + BLE)</td><td>App sync and phone-proximity identification</td><td>₹350–600</td></tr>
+      <tr><td>Dilution / specific-gravity front end</td><td>The core moat; corrects every reading</td><td>₹500–900</td></tr>
+      <tr><td>Weight / presence sensor</td><td>Occupancy trigger and passive identification</td><td>₹300–500</td></tr>
+      <tr><td>Cleaning subsystem (pump, valves, jets)</td><td>Rinse and flush after every use</td><td>₹1,200–1,800</td></tr>
+      <tr><td>Verification sensor</td><td>Confirms no carry-over before next sample</td><td>₹250–450</td></tr>
+      <tr><td>Power supply + surge protection</td><td>Mains power with electrical safety</td><td>₹400–700</td></tr>
+      <tr><td>Wiring, connectors, IP67 seals</td><td>Assembly plus water-ingress protection</td><td>₹400–700</td></tr>
+      <tr><td>Water fittings + valves</td><td>Integrates into home plumbing</td><td>₹500–900</td></tr>
+      <tr><td>Status indicator + fasteners/gaskets</td><td>On-device feedback; holds assembly together</td><td>₹400–800</td></tr>
+    </tbody>
+    <tfoot><tr><td>Hardware BOM subtotal</td><td>Direct materials only</td><td>≈ ₹11,300–16,950</td></tr></tfoot>
+  </table></div>
+
+  <h3 style="margin:22px 0 8px">B · Cartridge bill of materials (per cartridge, monthly)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Component</th><th>Why it is in the cost</th><th>Tentative / unit</th></tr></thead>
+    <tbody>
+      <tr><td>Substrate + printed electrode array</td><td>The electrochemical sensing element</td><td>₹55–110</td></tr>
+      <tr><td>Enzyme + reagent pads (10 markers)</td><td>Chemistry that reacts with each marker</td><td>₹90–150</td></tr>
+      <tr><td>Dilution reagent + microfluidic layer</td><td>Correction reference; routes the sample</td><td>₹40–75</td></tr>
+      <tr><td>Authentication chip</td><td>Unlocks the tier; blocks counterfeits</td><td>₹35–60</td></tr>
+      <tr><td>Housing, sterile seal, packaging</td><td>Protects and stabilises the cartridge</td><td>₹40–80</td></tr>
+      <tr><td>Fill, assembly, QC, shelf-life</td><td>Building, checking, proving expiry</td><td>₹50–90</td></tr>
+    </tbody>
+    <tfoot><tr><td>Cartridge cost subtotal</td><td>Matches the ₹350–450 make-cost target; sold at ₹899–1,199</td><td>≈ ₹310–565</td></tr></tfoot>
+  </table></div>
+
+  <h3 style="margin:22px 0 8px">C · One-time costs (capex, software, regulatory, IP)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Item</th><th>Why it is in the cost</th><th>Tentative</th></tr></thead>
+    <tbody>
+      <tr><td>Moulds + cartridge line + jigs + calibration standards</td><td>Needed to mass-produce at quality</td><td>₹90–180 lakh</td></tr>
+      <tr><td>App + cloud AI + security/DPDP compliance</td><td>The subscription layer and legal data handling</td><td>₹30–60 lakh</td></tr>
+      <tr><td><strong>Clinical evaluation / validation study</strong></td><td>India-specific clinical evidence is mandatory and buyers demand it</td><td>₹30–80 lakh</td></tr>
+      <tr><td>CDSCO licence + ISO 13485 + IEC 60601 + biocompatibility</td><td>Legal to sell, safe to use, made to standard</td><td>₹18–46 lakh</td></tr>
+      <tr><td>Patent search + filing + trademark</td><td>Confirms freedom to operate; protects the moat</td><td>₹1.7–11.5 lakh</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="margin:22px 0 8px">D · Operating, launch and overhead (recurring, easy to forget)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Cost line</th><th>Why it is in the cost</th><th>Tentative</th></tr></thead>
+    <tbody>
+      <tr><td>Assembly labour, QC, calibration (per unit)</td><td>People build and test each device</td><td>₹1,300–2,500 / unit</td></tr>
+      <tr><td>Yield loss / scrap</td><td>Real production has defects</td><td>3–7% of BOM</td></tr>
+      <tr><td>Shipping + crating; installation</td><td>Ceramic is heavy and fragile; a plumber fits it</td><td>₹2,500–5,000 / unit</td></tr>
+      <tr><td>Warranty reserve + spares + support</td><td>Hardware fails; users need help</td><td>3–6% of hardware revenue + per unit</td></tr>
+      <tr><td>Customer acquisition + channel margin</td><td>Buyers do not appear for free; channel takes a cut</td><td>10–20% of price + CAC</td></tr>
+      <tr><td>Salaries, product-liability insurance, office, admin</td><td>Running the company; a medical device carries legal exposure</td><td>Fixed monthly / annual</td></tr>
+      <tr><td>Contingency + cost of capital</td><td>Estimates are uncertain; capex has a financing cost</td><td>10–15% + funding terms</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">How the price holds together</span><p>Direct materials are roughly ₹11,000–17,000. Once labour, QC, calibration, tooling amortisation, freight, warranty and channel margin are added, the fully-loaded hardware cost lands near ₹33,000, which is why the ₹55,000–75,000 commode carries only a modest margin. The cartridge, made for ₹350–450 and sold at ₹899–1,199 at around 58% margin, is what actually earns. That is why the business leans on the consumable.</p></div>
+</section>
+
+<!-- ===== TAB 10: REVENUE MODEL (professor's) ===== -->
+<section class="tab" data-title="Revenue model" id="t-rev">
+  <div class="eyebrow">The professor's revenue model</div>
+  <h2>Three layers, institutions first, cartridge-led</h2>
+  <p class="sintro">This tab is the revenue model as the professor framed it, kept separate on purpose. The product is built in the same three layers it earns from, so how it is made and how it earns are the same shape.</p>
+  <div class="grid g3">
+    <div class="card"><div class="n">LAYER 1 · HARDWARE</div><h3 style="margin-top:5px">The commode</h3><p style="margin-top:6px"><strong>₹55k–75k</strong> sale near cost, or a monthly lease for institutions. Thin margin by design. This removes the barrier; it is not where the profit sits.</p></div>
+    <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n">LAYER 2 · CONSUMABLE</div><h3 style="margin-top:5px">The cartridge</h3><p style="margin-top:6px"><strong>₹899–1,199 / month</strong> at 55–65% margin. Recurring, per active device. This is the financial centre of the business.</p></div>
+    <div class="card"><div class="n">LAYER 3 · INTELLIGENCE</div><h3 style="margin-top:5px">The subscription</h3><p style="margin-top:6px">Tiered SaaS for AI scoring and the physician dashboard, plus enterprise contracts. Without it the device gives raw readings only.</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="margin-bottom:8px">Customers, in the professor's priority order</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Priority</th><th>Segment</th><th>Why first</th><th>How they pay</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Hospitals and diagnostic chains</td><td>They feel the pain, and they generate clinical evidence</td><td>Lease + cartridge + enterprise contract</td></tr>
+      <tr><td>2</td><td>Elder-care and assisted living</td><td>Daily passive monitoring is high value here</td><td>Lease + cartridge subscription</td></tr>
+      <tr><td>3</td><td>Corporate wellness</td><td>Scaled, funded buyers with health budgets</td><td>Annual contract + cartridge</td></tr>
+      <tr><td>4</td><td>Premium households</td><td>Consumer pull, once evidence exists</td><td>Device sale + cartridge + SaaS</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="margin:22px 0 8px">The eight revenue streams</h3>
+  <div class="grid g4">
+    <div class="card"><p><strong>1.</strong> Device sale</p></div>
+    <div class="card"><p><strong>2.</strong> Device lease</p></div>
+    <div class="card"><p><strong>3.</strong> Cartridge subscription</p></div>
+    <div class="card"><p><strong>4.</strong> Intelligence SaaS</p></div>
+    <div class="card"><p><strong>5.</strong> Enterprise / institutional contracts</p></div>
+    <div class="card"><p><strong>6.</strong> Physician dashboard licensing</p></div>
+    <div class="card"><p><strong>7.</strong> Anonymised, consented data insights (DPDP-compliant)</p></div>
+    <div class="card"><p><strong>8.</strong> Extended warranty and service</p></div>
+  </div>
+  <div class="call gold"><span class="cl">The professor's caution, kept in view</span><p>Any data-based revenue must be strictly consent-based and DPDP-compliant. It is listed last on purpose, never as the primary model. The cartridge remains the engine.</p></div>
+  <div class="call teal"><span class="cl">Why this model is coherent</span><p>Hardware near cost gets the device into institutions, the cartridge earns recurring revenue per active device, and the subscription deepens it. Leading with institutions is also what builds the clinical evidence the survey said buyers need. Every piece reinforces the others.</p></div>
+</section>
+
+<!-- ===== TAB 11: COMPETITION ===== -->
+<section class="tab" data-title="Competition" id="t-comp">
+  <div class="eyebrow">Market competition</div>
+  <h2>Colour readers versus a corrected molecular instrument</h2>
+  <p class="sintro">Every major player reads colour or images and reports a handful of parameters without naming a molecule. Health Pod measures molecules and corrects for dilution. Details are from the companies' own public product information.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Product</th><th>Method</th><th>Parameters</th><th>Clinical numbers?</th><th>Price position</th></tr></thead>
+    <tbody>
+      <tr><td>Withings U-Scan</td><td>Optical / colour cartridge</td><td>A few</td><td>No, colour category</td><td>Premium clip-on</td></tr>
+      <tr><td>Kohler Dekoda</td><td>Optical / imaging</td><td>Few</td><td>No molecular value</td><td>Premium add-on</td></tr>
+      <tr><td>TOTO</td><td>Sensor / wellness</td><td>0 to 2</td><td>No</td><td>Premium toilet</td></tr>
+      <tr><td>Throne</td><td>Optical camera</td><td>Imaging only</td><td>No panel</td><td>Niche consumer</td></tr>
+      <tr><td style="background:var(--tealtint)"><strong>Health Pod</strong></td><td style="background:var(--tealtint)"><strong>Electrochemical + dilution correction</strong></td><td style="background:var(--tealtint)">Up to ~28 across tiers</td><td style="background:var(--tealtint)"><span class="chip g">Yes, corrected</span></td><td style="background:var(--tealtint)">₹55k–75k, cartridge-led</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">The moat, in one line</span><p>Moving from optical to molecular needs different hardware, different chemistry and a new regulatory pathway, an estimated three-to-five-year re-engineering effort for any incumbent, so a colour-strip competitor cannot simply copy this.</p></div>
+</section>
+
+<!-- ===== TAB 12: INNOVATION & PATENTS ===== -->
+<section class="tab" data-title="Innovation &amp; Patents" id="t-innov">
+  <div class="eyebrow">Innovation, patents, and why this is not a copy</div>
+  <h2>Our own concept, laid out plainly</h2>
+  <p class="sintro">This answers the question directly: are we copying anyone? No. Below is what already exists and who owns it, what we deliberately avoid, and what is genuinely ours.</p>
+  <div class="grid g3">
+    <div class="card"><div class="n" style="color:var(--navy)">WHAT ALREADY EXISTS</div>
+      <p style="margin-top:8px"><strong>Withings U-Scan</strong> optical clip-on, US 2023/0062797.<br><strong>Kohler Dekoda</strong> imaging add-on.<br><strong>TOTO</strong> wellness sensing.<br><strong>Stanford</strong> broad smart-toilet and in-bowl stool camera, US 11,604,177 B1.</p></div>
+    <div class="card" style="background:var(--rusttint);border-color:#E6C9C6"><div class="n" style="color:var(--rust)">WHAT WE AVOID ON PURPOSE</div>
+      <p style="margin-top:8px">✕ No broad smart-toilet claim (Stanford's category).<br>✕ No in-bowl camera or stool imaging (Stanford).<br>✕ No optical clip-on copy (Withings).<br>✕ No borrowed branding or wording.</p></div>
+    <div class="card" style="background:var(--tealtint);border-color:var(--tealline)"><div class="n" style="color:var(--teal)">WHAT IS GENUINELY OURS</div>
+      <p style="margin-top:8px">✓ Dilution-normalised in-situ panel.<br>✓ Capability-unlocking cartridge.<br>✓ Consent-gated activation.<br>✓ Between-user reset verification.</p></div>
+  </div>
+  <div class="call navy"><span class="cl">The plain verdict</span><p>The competitors are colour or image readers. Health Pod is a corrected molecular instrument built into the commode, that scales tier by tier through the cartridge and protects every user through consent-gated testing. That specific combination is not offered by any product on the market. It is our own concept and design.</p></div>
+
+  <div class="divider"></div>
+  <h2>Patent provisioning</h2>
+  <p class="sintro">Four candidate inventions worth filing on, ranked by strength. These are candidates, not granted patents.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Candidate invention</th><th>Strength</th><th>Why it is defensible and ours</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Capability-unlocking cartridge</strong></td><td><span class="chip g">Strongest</span></td><td>A cartridge with a combined physical and electronic key that unlocks dormant sensor banks, so one base becomes Lite, Pro or Max by cartridge alone. Primary filing candidate.</td></tr>
+      <tr><td><strong>Dilution-normalised in-situ panel</strong></td><td><span class="chip g">Strong</span></td><td>Quantified electrochemical measurement corrected for real-time bowl-water dilution. No optical competitor can do this. Grounded in physics.</td></tr>
+      <tr><td><strong>Consent-gated activation</strong></td><td><span class="chip a">Moderate</span></td><td>Sensor activation tied to a per-user consent and identity state, so guests are physically never tested.</td></tr>
+      <tr><td><strong>Between-user reset verification</strong></td><td><span class="chip a">Moderate</span></td><td>A flush-then-verify sequence that confirms the channel is clean before accepting the next sample.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call gold"><span class="cl">The honest caveat</span><p>The idea of a consumable that unlocks functions also exists in other industries, such as printers and lab analysers. A registered patent agent must run a full cross-field search before we file. Nothing here is granted yet. What we have is a clean, defensible position and four candidates worth filing on. The provisioning plan: file provisionals on the top two first, then full filings, with an optional PCT for international cover.</p></div>
+</section>
+
+<!-- ===== TAB 13: VALIDATION ===== -->
+<section class="tab" data-title="Validation" id="t-valid">
+  <div class="eyebrow">Validation, every claim checked against itself</div>
+  <h2>What is proven, what is a target, what still has to be tested</h2>
+  <p class="sintro">This holds the whole demo to account. Each claim is tagged by evidence level so nothing reads as a fact it has not earned. This is what makes it hold up under a professor's or an investor's questioning.</p>
+
+  <div class="call teal"><span class="cl">Two different meanings of "validated", kept separate</span><p>The demo itself is fully checked and working: the 3D navigator, the architecture layers, the biomarker panel and the live simulator all run correctly and say only what the design supports. That build is validated. What is not yet validated is the product's clinical accuracy in the real world, which needs lab and hospital testing. We would be lying to call that finished, so it is labelled honestly below. A demo that claims 100% clinical proof it does not have is exactly what fails in front of an investor. This one does not.</p></div>
+  <div class="tw"><table>
+    <thead><tr><th>Claim in this demo</th><th>Evidence level</th><th>The honest position</th></tr></thead>
+    <tbody>
+      <tr><td>Electrochemical urine sensing works</td><td><span class="eb proven">Proven</span></td><td>Mature, commercial technology.</td></tr>
+      <tr><td>Specific gravity corrects for dilution</td><td><span class="eb proven">Proven method</span></td><td>Standard lab practice; applying it in the bowl is the engineering to prove.</td></tr>
+      <tr><td>Ten-marker MVP panel</td><td><span class="eb validate">Mixed</span></td><td>Glucose, pH, specific gravity are strong electrochemical reads. Several markers start as reagent-pad reads. Full quantification is validation work.</td></tr>
+      <tr><td>Dilution-correction accuracy</td><td><span class="eb validate">Must validate</span></td><td>Must be checked against lab reference readings before any accuracy claim.</td></tr>
+      <tr><td>Passive family identification</td><td><span class="eb validate">Must validate</span></td><td>Sound method, used elsewhere, but accuracy in a real household must be tested.</td></tr>
+      <tr><td>Cleaning prevents carry-over</td><td><span class="eb validate">Must validate</span></td><td>Firm design; zero carry-over must be proven in testing.</td></tr>
+      <tr><td>The 3D model and navigator</td><td><span class="eb market">Representation</span></td><td>A demo model of the design, not final styling or a scan of a built unit.</td></tr>
+      <tr><td>The simulator</td><td><span class="eb market">Faithful illustration</span></td><td>A faithful simulation of the intended experience, not footage; readings are illustrative.</td></tr>
+      <tr><td>All cost figures</td><td><span class="eb validate">Indicative</span></td><td>Placeholders for completeness, pending real quotes.</td></tr>
+      <tr><td>Competitor facts</td><td><span class="eb market">Public info</span></td><td>From the companies' public descriptions; verify before external use.</td></tr>
+      <tr><td>Patent position</td><td><span class="eb validate">Not filed</span></td><td>Four candidates, no granted patent; a cross-field search comes first.</td></tr>
+      <tr><td>Regulatory pathway</td><td><span class="eb validate">In progress</span></td><td>CDSCO Class B mapped for Lite; India-specific clinical evaluation mandatory, no waiver assumed.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call gold"><span class="cl">The one thing this demo will not claim</span><p>It will not call itself flawless or finished. Every soft spot is named, owned, and has a next step, rather than hidden. That honesty is the strength, not a weakness.</p></div>
+</section>
+</main>
+<footer>
+  <p>Health Pod · Investor demo and product navigator · BPP Group 8 · Section F · EPGP Batch 17<br>
+  3D model, navigator and simulator are made-for-demo representations, not a built product or filmed footage.<br>
+  All prices and accuracy figures are design targets pending quotes and clinical validation. Not a filed patent.<br>
+  Stanford US 11,604,177 B1 and Withings US 2023/0062797 referenced only to define what we avoid. Competitor details from public information.</p>
+</footer>
+<script src="./three.min.js"></script>
+<script>if(!window.THREE){document.write('<scr'+'ipt src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/scr'+'ipt>');}</script>
+<script>
+/* ================= TABS ================= */
+(function(){
+  var tabsBar=document.getElementById('tabs');
+  var sections=Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var threeInit=false;
+  sections.forEach(function(sec,i){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('role','tab');
+    b.innerHTML=sec.getAttribute('data-title');
+    if(i===0)b.classList.add('on');
+    b.addEventListener('click',function(){
+      sections.forEach(function(s){s.classList.remove('active');});
+      Array.prototype.forEach.call(tabsBar.children,function(x){x.classList.remove('on');});
+      sec.classList.add('active'); b.classList.add('on');
+      window.scrollTo({top:0,behavior:'auto'});
+      if(sec.id==='t-3d'){ if(!threeInit){threeInit=true; window.__init3D&&window.__init3D();} else { window.__resize3D&&window.__resize3D(); } }
+    });
+    tabsBar.appendChild(b);
+  });
+})();
+
+/* ================= SIMULATOR ================= */
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var people={
+    anil:{name:'Anil',color:'#1F3864'},priya:{name:'Priya',color:'#6D3B8E'},
+    sunita:{name:'Sunita',color:'#0B6E55'},guest:{name:'Guest',color:'#8898A4'},
+    rohan:{name:'Rohan',color:'#8A6400'},dadi:{name:'Dadi',color:'#8A2A24'}
+  };
+  function approach(p,clock){return {ph:'Approach',t:p.name+' sits down',clock:clock,st:['amber','Someone is here'],
+    zone:{type:'text',html:'weight detected &nbsp;·&nbsp; a phone is nearby'},note:'The device wakes. Nothing is measured yet.',phone:{type:'idle'},
+    x:'The seat senses weight and a nearby phone. The device wakes, but it still has to work out who this is before anything happens.'};}
+  function identify(p,clock){return {ph:'Identify',t:'Checking who it is',clock:clock,st:['teal','Identifying…'],
+    zone:{type:'signals'},note:'Three signals are compared against each registered person.',phone:{type:'identifying'},
+    x:'The device compares three signals: the phone nearby over Bluetooth, a learned weight-and-time pattern, and a chemical fingerprint from the first drops. It never relies on just one.'};}
+  function tested(p,clock,marker,raw,factor,corrected,statusText,kind){
+    var ml=marker.toLowerCase();
+    return {outcome:kind==='alert'?'alert':'tested',clock:clock,steps:[
+      approach(p,clock), identify(p,clock),
+      {ph:'Decision',t:'Identified: '+p.name,clock:clock,st:['navy',p.name],
+       zone:{type:'text',html:'registered ✓ &nbsp; testing ON ✓ &nbsp; not tested today ✓'},
+       note:'All three signals agree. '+p.name+' is cleared for today\u2019s test.',phone:{type:'hello',p:p},
+       x:'The three signals agree, so the reading saves to '+p.name+'. '+p.name+' is opted in and has not been tested yet today, so the device goes ahead.'},
+      {ph:'Sample',t:'One sample, once for the day',clock:clock,st:['teal','Sampling…'],
+       zone:{type:'text',html:'sealed channel &nbsp;·&nbsp; not the open bowl'},note:'The sample enters a sealed channel, off the bowl surface.',phone:{type:'testing'},
+       x:'A small sample is drawn into a sealed channel. This runs once a day, not on every flush, which protects privacy and saves the cartridge.'},
+      {ph:'Measure',t:'Reading '+ml,clock:clock,st:['teal','Measuring'],
+       zone:{type:'readout',rows:[['raw '+ml,raw,false]]},note:'The cartridge produces a raw electrochemical reading.',phone:{type:'testing'},
+       x:'The cartridge measures '+ml+'. The raw number is '+raw+'. But a toilet sample is diluted, so this is not the true value yet.'},
+      {ph:'Correct',t:'Correcting for dilution',clock:clock,st:['teal','Correcting'],
+       zone:{type:'readout',rows:[['raw',raw,false],['dilution',factor,false],['corrected',corrected,true]]},
+       note:'The dilution is measured and the reading corrected. Optical rivals cannot do this.',phone:{type:'testing'},
+       x:'The device measures how diluted the sample is ('+factor+') and corrects the reading. The corrected '+ml+' is '+corrected+'. This is the core of why the number can be trusted.'},
+      {ph:'Result',t:'Result on '+p.name+'\u2019s phone',clock:clock,st:[kind==='alert'?'rust':'green',kind==='alert'?'Flagged':'Result sent'],
+       zone:{type:'text',html:corrected+' &nbsp;·&nbsp; '+statusText},
+       note:kind==='alert'?'Reading crossed a threshold. The linked doctor is notified.':'Reading is in range. No alert needed.',
+       phone:{type:'result',p:p,marker:marker,corrected:corrected,statusText:statusText,kind:kind},
+       x:'Within a few minutes '+p.name+' sees the result privately: '+statusText+'.'+(kind==='alert'?' Because it crossed a clinical threshold, '+p.name+'\u2019s linked doctor is notified automatically.':' The day shows green, and the reading joins '+p.name+'\u2019s trend.')},
+      {ph:'Clean',t:'Clean, verify, ready for the next person',clock:clock,st:['teal','Cleaning + verify'],
+       zone:{type:'water'},note:'Rinse, channel flush, then a check confirms the surface is clean.',
+       phone:{type:'result',p:p,marker:marker,corrected:corrected,statusText:statusText,kind:kind},
+       x:'A rinse and a channel flush run automatically, then a verification check confirms the surface is clean. Only then will the device accept the next person, so nothing carries over.'}
+    ]};
+  }
+  function optout(p,clock){return {outcome:'optout',clock:clock,steps:[approach(p,clock),identify(p,clock),
+    {ph:'Restricted',t:p.name+' has testing turned off',clock:clock,st:['rust','Not tested'],
+     zone:{type:'text',html:'recognised ✓ &nbsp; testing OFF ✕'},note:'Recognised as '+p.name+', who has opted out. No sample is taken.',phone:{type:'optout',p:p},
+     x:p.name+' chose not to be tested and switched it off in the app. The device recognises her and does nothing at all. No sample, no reading. She uses the toilet normally and it returns to ready. Turning testing back on is one tap, any time.'}]};}
+  function guestEvt(p,clock){return {outcome:'guest',clock:clock,steps:[approach(p,clock),
+    {ph:'Identify',t:'This is not a registered person',clock:clock,st:['grey','Unrecognised'],
+     zone:{type:'text',html:'no matching profile found'},note:'The three signals do not match anyone in the household.',phone:{type:'guest'},
+     x:'The signals do not match any registered person, so the visit cannot be attributed to a profile.'},
+    {ph:'Decision',t:'Guests are never tested',clock:clock,st:['grey','No test'],
+     zone:{type:'text',html:'no profile → no test'},note:'Without a profile, no test runs. The guest uses the toilet normally.',phone:{type:'guest'},
+     x:'No profile means no test, by design. This is how testing stays limited to people who registered and opted in. A visitor or house help is never tested.'}]};}
+  function already(p,clock,earlier){return {outcome:'already',clock:clock,steps:[approach(p,clock),identify(p,clock),
+    {ph:'Decision',t:p.name+' was already tested today',clock:clock,st:['navy','Already done today'],
+     zone:{type:'text',html:'identified ✓ &nbsp; today\u2019s test already recorded ✓'},note:'A second visit the same day does not repeat the test.',phone:{type:'already',p:p},
+     x:p.name+' came back later. He was already tested at '+earlier+', so the device does not run again. His phone shows today\u2019s result is already recorded. One meaningful reading a day is the design.'}]};}
+
+  var events=[
+    tested(people.anil,'06:40','Glucose','1.6 mmol/L','× 3.4','5.4 mmol/L','In range','ok'),
+    optout(people.priya,'06:52'),
+    tested(people.sunita,'07:05','Protein','0.05 g/L','× 2.8','0.14 g/L','In range','ok'),
+    guestEvt(people.guest,'07:20'),
+    tested(people.rohan,'07:35','pH','5.8','× 3.1','6.2','Normal','ok'),
+    already(people.anil,'08:10','06:40'),
+    tested(people.dadi,'08:30','Glucose','2.7 mmol/L','× 3.4','9.1 mmol/L','Above range','alert')
+  ];
+  var evPeople=[people.anil,people.priya,people.sunita,people.guest,people.rohan,people.anil,people.dadi];
+  var flat=[]; events.forEach(function(ev,ei){ev.steps.forEach(function(s,si){flat.push({s:s,ei:ei,si:si,tot:ev.steps.length});});});
+
+  var COL={grey:['rgba(255,255,255,.08)','#7fae9d','#b9d6cb'],amber:['rgba(224,183,84,.16)','#E7C05A','#F0D488'],
+    teal:['rgba(84,224,166,.14)','#54E0A6','#8affce'],navy:['rgba(150,180,230,.18)','#8FB4E6','#C7D9F2'],
+    green:['rgba(84,224,166,.22)','#54E0A6','#8affce'],rust:['rgba(224,120,110,.18)','#E6857B','#F0ADA5']};
+  var rail=document.getElementById('rail'),pill=document.getElementById('statusPill'),stTxt=document.getElementById('statusText'),
+    devZone=document.getElementById('devZone'),devNote=document.getElementById('devNote'),pbody=document.getElementById('pbody'),
+    devClock=document.getElementById('devClock'),phaseTag=document.getElementById('phaseTag'),stepCount=document.getElementById('stepCount'),
+    narrTitle=document.getElementById('narrTitle'),narrText=document.getElementById('narrText'),backBtn=document.getElementById('backBtn'),
+    nextBtn=document.getElementById('nextBtn'),playBtn=document.getElementById('playBtn'),progFill=document.getElementById('progFill');
+  var outIcon={tested:['✓','#0B6E55'],alert:['!','#8A2A24'],optout:['✕','#8A2A24'],guest:['?','#8898A4'],already:['↺','#1F3864']};
+  events.forEach(function(ev,ei){var p=evPeople[ei];var b=document.createElement('button');b.className='revent';b.type='button';var oi=outIcon[ev.outcome];
+    b.innerHTML='<div class="av" style="background:'+p.color+'">'+p.name[0]+'<span class="tick" style="background:'+oi[1]+'">'+oi[0]+'</span></div><div class="rn">'+p.name+'</div><div class="rr">'+ev.clock+'</div>';
+    b.addEventListener('click',function(){var i=flat.findIndex(function(f){return f.ei===ei&&f.si===0;});go(i);});rail.appendChild(b);});
+  var railBtns=rail.children;
+  function renderZone(z){
+    if(z.type==='text')return '<div style="font-family:var(--mono);font-size:13px;color:#8fc7b3">'+z.html+'</div>';
+    if(z.type==='signals')return '<div class="siglist">'+['Phone nearby (Bluetooth)','Weight and time-of-day pattern','Biochemical fingerprint'].map(function(r){return '<div class="sig"><span class="sc">✓</span>'+r+'</div>';}).join('')+'</div>';
+    if(z.type==='readout')return '<div class="readout">'+z.rows.map(function(r){return '<div class="rrow'+(r[2]?' fin':'')+'"><span class="rk">'+r[0]+'</span><span class="rv">'+r[1]+'</span></div>';}).join('')+'</div>';
+    if(z.type==='water')return '<div class="readout"><div class="water"><span class="drop"></span><span class="drop"></span><span class="drop"></span><span class="drop"></span><span class="drop"></span></div><div class="rrow fin"><span class="rk">verify clean</span><span class="rv">✓ passed</span></div></div>';
+    return '';
+  }
+  function bars(kind){var hs=[40,55,45,60,50,62,kind==='alert'?95:70];return hs.map(function(h,i){return '<span class="'+(i===6?'hi':'')+'" style="height:'+h+'%'+(kind==='alert'&&i===6?';background:#8A2A24':'')+'"></span>';}).join('');}
+  function renderPhone(ph){switch(ph.type){
+    case 'idle':return '<div class="picon" style="background:var(--tealtint);color:var(--teal)">◔</div><div class="pmut">Waiting. No test is running.</div>';
+    case 'identifying':return '<div class="pspin"></div><div class="pmut">Identifying user…</div>';
+    case 'hello':return '<div class="picon" style="background:'+ph.p.color+'22;color:'+ph.p.color+'">'+ph.p.name[0]+'</div><div class="pname">Hello, '+ph.p.name+'</div><div class="pmut">Today\u2019s test is starting</div>';
+    case 'testing':return '<div class="pspin"></div><div class="pname" style="font-size:15px">Running today\u2019s test</div><div class="pmut">This takes a few minutes</div>';
+    case 'result':return '<div class="presultcard"><div class="pmarker">'+ph.marker+' · corrected</div><div class="pval">'+ph.corrected+'</div><span class="pstatus '+(ph.kind==='alert'?'ps-alert':'ps-ok')+'">'+(ph.kind==='alert'?'▲ ':'✓ ')+ph.statusText+'</span><div class="spark">'+bars(ph.kind)+'</div></div><div class="pmut" style="margin-top:10px">'+(ph.kind==='alert'?'Your doctor has been notified.':'Added to your trend.')+'</div>';
+    case 'optout':return '<div class="picon" style="background:var(--rusttint);color:var(--rust)">✕</div><div class="pname">Testing is off</div><div class="pmut">'+ph.p.name+' has testing switched off. Turn it on any time in Settings.</div>';
+    case 'guest':return '<div class="picon" style="background:#EEF1F3;color:#8898A4">?</div><div class="pname">No profile</div><div class="pmut">This person is not registered on this device. Nothing is tested.</div>';
+    case 'already':return '<div class="picon" style="background:var(--tealtint);color:var(--teal)">✓</div><div class="pname">Already tested today</div><div class="pmut">'+ph.p.name+'\u2019s reading was recorded this morning. No repeat needed.</div>';
+  }return '';}
+  var idx=0,playing=false,timer=null;
+  function render(){var f=flat[idx],s=f.s,c=COL[s.st[0]];
+    pill.style.background=c[0];pill.querySelector('.sd').style.background=c[1];stTxt.style.color=c[2];stTxt.textContent=s.st[1];
+    devZone.innerHTML=renderZone(s.zone);devNote.textContent=s.note;devClock.textContent=s.clock;pbody.innerHTML=renderPhone(s.phone);
+    phaseTag.textContent=s.ph;stepCount.textContent='Event '+(f.ei+1)+' of '+events.length+' · step '+(f.si+1)+' of '+f.tot;
+    narrTitle.textContent=s.t;narrText.textContent=s.x;progFill.style.width=((idx+1)/flat.length*100)+'%';
+    backBtn.disabled=(idx===0);nextBtn.disabled=(idx===flat.length-1);
+    for(var i=0;i<railBtns.length;i++)railBtns[i].classList.toggle('on',i===f.ei);}
+  function go(i){idx=Math.max(0,Math.min(flat.length-1,i));render();}
+  function stopPlay(){playing=false;playBtn.textContent='▶ Auto-play';if(timer){clearInterval(timer);timer=null;}}
+  function startPlay(){if(idx===flat.length-1)idx=0;playing=true;playBtn.textContent='❚❚ Pause';timer=setInterval(function(){if(idx>=flat.length-1){stopPlay();render();return;}idx++;render();},reduce?1400:2200);render();}
+  nextBtn.addEventListener('click',function(){stopPlay();go(idx+1);});
+  backBtn.addEventListener('click',function(){stopPlay();go(idx-1);});
+  playBtn.addEventListener('click',function(){playing?stopPlay():startPlay();});
+  render();
+})();
+</script>
+<script>
+/* ================= 3D NAVIGATOR ================= */
+(function(){
+  var components=[
+    {id:'body',n:'Ceramic commode body',d:'The structural shell and bowl',eb:'proven',
+     detail:'A standard sanitaryware commode, cast and glazed by an Indian maker such as Hindware, Cera or Jaquar. It houses every subsystem and installs like any premium WC.'},
+    {id:'zone',n:'Sealed sample zone',d:'Where the sample is captured, off the surface',eb:'validate',
+     detail:'A sealed channel inside the bowl takes the sample away from the open surface, so one person\u2019s sample does not spread. Proving zero carry-over here is part of validation.'},
+    {id:'sensor',n:'Sensor and cartridge module',d:'The diagnostic core',eb:'validate',
+     detail:'Holds the electrochemical cartridge in contact with the sample. This is the layer that turns the toilet into a diagnostic instrument.'},
+    {id:'cart',n:'Cartridge dock',d:'Reads the cartridge, unlocks the tier',eb:'proven',
+     detail:'A physical and electronic key. The cartridge both supplies the chemistry and unlocks the tier, so one base becomes Lite, Pro or Max by cartridge alone. This is our strongest patent candidate.'},
+    {id:'dil',n:'Dilution sensor',d:'The core moat',eb:'validate',
+     detail:'Measures specific gravity at the moment of reading, so every result is corrected for how diluted the bowl sample is. No optical rival can do this.'},
+    {id:'clean',n:'Cleaning system',d:'Rinse, flush, verify',eb:'proven',
+     detail:'Water-jet rinse and channel flush after every use, then a verification check confirms the surface is clean before the next sample is accepted.'},
+    {id:'pcb',n:'Controller and PCB',d:'Runs everything',eb:'proven',
+     detail:'A low-power microcontroller runs the cycle logic, drives cleaning, and does first-pass edge scoring on the device. No exotic parts.'},
+    {id:'conn',n:'Connectivity and power',d:'App link and mains power',eb:'proven',
+     detail:'Wi-Fi and BLE for app sync and phone-proximity identification, plus a mains supply with surge protection, sealed to IP67.'}
+  ];
+  var listEl=document.getElementById('complist'), detailEl=document.getElementById('compDetail');
+  var ebLabel={proven:['Proven','proven'],validate:['Validate','validate']};
+  components.forEach(function(c,i){
+    var b=document.createElement('button'); b.className='comp'; b.type='button';
+    b.innerHTML='<span class="idx">'+(i+1)+'</span><span><span class="cn">'+c.n+' <span class="eb '+c.eb+'">'+ebLabel[c.eb][0]+'</span></span><span class="cd">'+c.d+'</span></span>';
+    b.addEventListener('click',function(){ selectComp(i); });
+    listEl.appendChild(b);
+  });
+  function selectComp(i){
+    var c=components[i];
+    Array.prototype.forEach.call(listEl.children,function(x,j){x.classList.toggle('on',j===i);});
+    detailEl.innerHTML='<div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">COMPONENT '+(i+1)+' · '+ebLabel[c.eb][0].toUpperCase()+'</div><h3 style="margin-top:5px">'+c.n+'</h3><p class="body" style="margin-top:6px">'+c.detail+'</p>';
+    if(window.__highlight3D) window.__highlight3D(c.id);
+  }
+
+  var renderer,scene,cam,pivot,meshes={},reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var autoRotate=true,exploded=false,rotY=0.5,rotX=0.16,dist=6,dragging=false,px=0,py=0,glow=0;
+
+  window.__init3D=function(){
+    var canvas=document.getElementById('c3d'),load=document.getElementById('load3d');
+    if(!window.THREE){load.textContent='3D needs a connection to load. Every other tab works offline.';return;}
+    var W=canvas.clientWidth||480,H=canvas.clientHeight||360;
+    try{renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});}
+    catch(e){load.textContent='This browser could not start 3D. The rest of the demo is unaffected.';return;}
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); renderer.setSize(W,H,false);
+    scene=new THREE.Scene(); cam=new THREE.PerspectiveCamera(40,W/H,0.1,100);
+    scene.add(new THREE.AmbientLight(0xffffff,0.6));
+    var k=new THREE.DirectionalLight(0xffffff,0.9);k.position.set(4,6,4);scene.add(k);
+    var f=new THREE.DirectionalLight(0x9fd6c4,0.4);f.position.set(-4,2,-3);scene.add(f);
+    pivot=new THREE.Group(); scene.add(pivot);
+    var ceramic=new THREE.MeshStandardMaterial({color:0xf4f7f6,roughness:0.35,metalness:0.02});
+    function mk(geo,mat,y,name){var m=new THREE.Mesh(geo,mat.clone());m.position.y=y;m.userData.baseY=y;m.userData.name=name;pivot.add(m);return m;}
+    // body group
+    meshes.body=[
+      mk(new THREE.CylinderGeometry(0.7,0.95,1.5,40),ceramic,-0.75,'body'),
+      mk(new THREE.CylinderGeometry(0.95,0.72,0.9,40,1,true),ceramic,0.35,'body'),
+      mk(new THREE.TorusGeometry(0.95,0.11,16,44),ceramic,0.8,'body'),
+      mk(new THREE.TorusGeometry(0.92,0.09,16,44),ceramic,0.93,'body')
+    ];
+    meshes.body[2].rotation.x=Math.PI/2; meshes.body[3].rotation.x=Math.PI/2;
+    // tank + power (conn)
+    meshes.conn=[ mk(new THREE.BoxGeometry(1.7,1.0,0.5),ceramic,0.95,'conn'), mk(new THREE.BoxGeometry(1.8,0.14,0.62),ceramic,1.5,'conn') ];
+    meshes.conn[0].position.z=-1.05; meshes.conn[1].position.z=-1.05;
+    // sample zone
+    meshes.zone=[ mk(new THREE.CylinderGeometry(0.72,0.72,0.08,40),new THREE.MeshStandardMaterial({color:0x2f5a4d,roughness:0.5}),-0.08,'zone') ];
+    // sensor module
+    meshes.sensor=[ mk(new THREE.CylinderGeometry(0.16,0.16,0.12,24),new THREE.MeshStandardMaterial({color:0x0b6e55,roughness:0.4}),0.03,'sensor') ];
+    // dilution sensor
+    meshes.dil=[ mk(new THREE.TorusGeometry(0.5,0.05,14,40),new THREE.MeshStandardMaterial({color:0x2b7fb0,roughness:0.4}),0.06,'dil') ];
+    meshes.dil[0].rotation.x=Math.PI/2;
+    // cartridge dock
+    meshes.cart=[ mk(new THREE.BoxGeometry(0.42,0.2,0.28),new THREE.MeshStandardMaterial({color:0x1f3864,roughness:0.5}),0.82,'cart') ];
+    meshes.cart[0].position.z=0.92;
+    // cleaning ring
+    meshes.clean=[ mk(new THREE.TorusGeometry(0.78,0.04,12,40),new THREE.MeshStandardMaterial({color:0x3f9ad6,roughness:0.4}),0.6,'clean') ];
+    meshes.clean[0].rotation.x=Math.PI/2;
+    // pcb internal
+    meshes.pcb=[ mk(new THREE.BoxGeometry(0.5,0.12,0.4),new THREE.MeshStandardMaterial({color:0x14401f,roughness:0.6}),-0.4,'pcb') ];
+
+    pivot.position.y=0.1; load.style.display='none';
+    // explode offsets
+    var explodeY={body:0,conn:0.9,zone:-0.4,sensor:1.5,dil:1.9,cart:2.4,clean:1.1,pcb:-1.3};
+    window.__explodeMap=explodeY;
+    // interaction
+    var btnRot=document.getElementById('btnRot'),btnEx=document.getElementById('btnExplode'),btnReset=document.getElementById('btnReset');
+    btnRot.addEventListener('click',function(){autoRotate=!autoRotate;btnRot.classList.toggle('on',autoRotate);});
+    btnEx.addEventListener('click',function(){exploded=!exploded;btnEx.classList.toggle('on',exploded);});
+    btnReset.addEventListener('click',function(){rotY=0.5;rotX=0.16;dist=6;exploded=false;btnEx.classList.remove('on');clearHi();Array.prototype.forEach.call(listEl.children,function(x){x.classList.remove('on');});});
+    function pd(e){dragging=true;autoRotate=false;btnRot.classList.remove('on');var t=e.touches?e.touches[0]:e;px=t.clientX;py=t.clientY;}
+    function pm(e){if(!dragging)return;var t=e.touches?e.touches[0]:e;rotY+=(t.clientX-px)*0.01;rotX=Math.max(-0.4,Math.min(0.9,rotX+(t.clientY-py)*0.01));px=t.clientX;py=t.clientY;if(e.touches)e.preventDefault();}
+    function pu(){dragging=false;}
+    canvas.addEventListener('mousedown',pd);window.addEventListener('mousemove',pm);window.addEventListener('mouseup',pu);
+    canvas.addEventListener('touchstart',pd,{passive:true});canvas.addEventListener('touchmove',pm,{passive:false});canvas.addEventListener('touchend',pu);
+    canvas.addEventListener('wheel',function(e){dist=Math.max(4.2,Math.min(9,dist+(e.deltaY>0?0.4:-0.4)));e.preventDefault();},{passive:false});
+
+    var current=null;
+    window.__highlight3D=function(id){current=id;
+      Object.keys(meshes).forEach(function(key){meshes[key].forEach(function(m){
+        var hit=(key===id); m.material.emissive&&m.material.emissive.setHex(hit?0x0b6e55:0x000000);
+      });});
+    };
+    window.__clearHi=function(){current=null;Object.keys(meshes).forEach(function(key){meshes[key].forEach(function(m){m.material.emissive&&m.material.emissive.setHex(0x000000);});});};
+    function clearHi(){window.__clearHi();}
+
+    function loop(){requestAnimationFrame(loop);
+      if(autoRotate&&!reduce)rotY+=0.004;
+      pivot.rotation.y=rotY;pivot.rotation.x=rotX;glow+=0.05;
+      Object.keys(meshes).forEach(function(key){var off=window.__explodeMap[key]||0;meshes[key].forEach(function(m){
+        var target=m.userData.baseY+(exploded?off:0); m.position.y+=(target-m.position.y)*0.12;
+        if(m.material.emissive&&current===key)m.material.emissiveIntensity=0.4+0.3*Math.sin(glow);
+      });});
+      cam.position.set(0,2.2,dist);cam.lookAt(0,0.3,0);renderer.render(scene,cam);
+    }
+    loop();
+  };
+  window.__resize3D=function(){var c=document.getElementById('c3d');if(renderer&&c.clientWidth){renderer.setSize(c.clientWidth,c.clientHeight,false);cam.aspect=c.clientWidth/c.clientHeight;cam.updateProjectionMatrix();}};
+})();
+</script>
+</body>
+</html>
