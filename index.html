@@ -188,18 +188,18 @@
   <div class="grid g4" style="margin-top:26px">
     <div class="stat"><div class="v">101M</div><div class="l">people with diabetes in India</div></div>
     <div class="stat"><div class="v">Daily</div><div class="l">passive test, zero effort</div></div>
-    <div class="stat"><div class="v">~28</div><div class="l">markers across tiers (10 at launch)</div></div>
+    <div class="stat"><div class="v">10</div><div class="l">markers in the MVP urine panel</div></div>
     <div class="stat"><div class="v">Cartridge</div><div class="l">recurring revenue engine</div></div>
   </div>
 
   <div class="grid g2" style="margin-top:24px">
-    <div class="card"><div class="n">WHAT WE ARE DOING</div><h3>Passive daily diagnostics, built into the toilet</h3><p>A full-commode device that samples once a day, measures urine markers electrochemically, corrects for dilution, and shows a simple trend and status in an app. Institutions first, then homes.</p></div>
+    <div class="card"><div class="n">WHAT WE ARE DOING</div><h3>Passive daily diagnostics, built into the toilet</h3><p>A full-commode device whose bowl shape separates urine from flush water on its own, then measures markers electrochemically on that clean sample once a day and shows a simple trend and status in an app. Institutions first, then homes.</p></div>
     <div class="card"><div class="n">WHY IT MATTERS</div><h3>Most chronic disease is caught late</h3><p>India carries a very large non-communicable disease burden, and screening is infrequent because it needs effort and clinics. A frictionless daily check that people never have to think about is infrastructure, not a gadget.</p></div>
     <div class="card"><div class="n">WHAT MOTIVATES US</div><h3>Make the earliest signal the easiest to get</h3><p>The earliest signs of kidney stress, diabetes control and infection often show in urine. If catching them costs the user nothing, more people catch them in time. That is the whole point of the product.</p></div>
-    <div class="card"><div class="n">THE TECHNOLOGY</div><h3>Molecular sensing, corrected for dilution</h3><p>Electrochemical measurement gives quantified values, not colour categories. A specific-gravity reading corrects each result for how diluted the bowl sample is. That correction is the core advantage no optical rival has.</p></div>
+    <div class="card"><div class="n">THE TECHNOLOGY</div><h3>Molecular sensing on an undiluted sample</h3><p>Electrochemical measurement gives quantified values, not colour categories. The bowl is shaped so urine separates itself from flush water before any sampling happens, so the device never has to correct a diluted reading. Quantified chemistry on a clean sample is the advantage no optical rival has.</p></div>
   </div>
 
-  <div class="call navy"><span class="cl">The research this stands on</span><p>The concept builds on published, peer-reviewed work on passive toilet-based diagnostics, including a Stanford study in Nature Biomedical Engineering that demonstrated the scientific feasibility of the approach. Electrochemical biosensing and specific-gravity dilution correction are established methods. We are combining proven science in a new form, not inventing unproven physics.</p></div>
+  <div class="call navy"><span class="cl">The research this stands on</span><p>The concept builds on published, peer-reviewed work on passive toilet-based diagnostics, including a Stanford study in Nature Biomedical Engineering that demonstrated the scientific feasibility of the approach. It also builds on the Laufen save! toilet, developed with EOOS and the Swiss institute Eawag, which separates urine from flush water using bowl geometry alone. Electrochemical biosensing is long established. We are combining proven engineering in a new form, not inventing unproven physics.</p></div>
 
   <div class="divider"></div>
   <h2>Under the hood: what actually happens in the backend</h2>
@@ -210,20 +210,20 @@
 
     <div class="card"><div class="n">STAGE 2 · THE ANALOG FRONT END</div><h3 style="margin-top:5px">A clean signal, then a number</h3><p>The raw current is in the microamp range, so an analog front-end amplifies it, filters out noise, and an analog-to-digital converter turns it into a digital value the microcontroller can use. Temperature is measured at the same time, because reaction rates drift with temperature, and the reading is compensated for it. Nothing here is exotic; these are standard biosensor electronics.</p></div>
 
-    <div class="card"><div class="n">STAGE 3 · CALIBRATION</div><h3 style="margin-top:5px">The cartridge carries its own calibration</h3><p>Each cartridge batch is factory-calibrated: the relationship between current and concentration (the calibration curve) is measured and stored on the cartridge's authentication chip. When the device reads a cartridge, it loads that curve, so it converts the current to a real concentration accurately, and it knows the cartridge is genuine and which tier it unlocks. This is how one hardware base becomes Lite, Pro or Max by cartridge alone.</p></div>
+    <div class="card"><div class="n">STAGE 3 · CALIBRATION</div><h3 style="margin-top:5px">The cartridge carries its own calibration</h3><p>Each cartridge batch is factory-calibrated: the relationship between current and concentration (the calibration curve) is measured and stored on the cartridge's authentication chip. When the device reads a cartridge, it loads that curve, so it converts the current to a real concentration accurately, and it knows the cartridge is genuine and which test panel it enables. The MVP ships one panel; the same mechanism is what later lets one hardware base support added panels by cartridge alone.</p></div>
 
-    <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n" style="color:var(--teal)">STAGE 4 · THE DILUTION CORRECTION (the moat)</div><h3 style="margin-top:5px">Normalise for how watered-down the sample is</h3><p>A bowl sample is diluted by residual water, so the concentration reads low. The device measures the sample's specific gravity (its density versus water), which tells it the dilution factor. The correction is simple arithmetic: corrected value = raw value × dilution factor. Clinical labs already normalise urine this way (often to creatinine). Doing it in situ, at the moment of reading, is the part rivals do not have.</p></div>
+    <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n" style="color:var(--teal)">STAGE 0 · PASSIVE URINE SEPARATION (the foundation)</div><h3 style="margin-top:5px">The bowl separates urine from water by shape alone</h3><p>We never sample from bowl water, because it dilutes a void five to fifteen times and pushes specific gravity to roughly 1.001–1.004, a range laboratories classify as invalid. Instead the bowl carries a urine-diverting geometry. Slow-moving urine clings to the ceramic surface and is guided into a concealed channel, while fast-moving flush water overshoots that channel and goes straight to the main drain. This is the teapot effect, and it works on surface tension alone with no valve, no sensor and no moving parts. The Laufen save! toilet ships exactly this and reports that separation works whether the user is a man, a woman or a child. A small tap then draws about one millilitre from that clean diverted flow into the cartridge, and the rest goes to drain. Specific gravity is checked as a validity gate: outside 1.003 to 1.030 the sample is rejected and no result is issued.</p></div>
 
-    <div class="card"><div class="n">STAGE 5 · IDENTITY FUSION</div><h3 style="margin-top:5px">Three weak signals combined into one confident decision</h3><p>The device does not use one sign of identity, it fuses three. Bluetooth signal strength from a registered phone gives proximity. A learned per-user model of weight and time-of-day gives a behavioural match. A rough biochemical baseline (for example the person's usual creatinine and specific-gravity signature) gives a chemical match. Each produces a confidence score; the scores are combined, and only if the total clears a threshold is the reading attributed to that person. Below the threshold it is marked unverified and never scored. This is standard sensor fusion, the same idea a phone uses to decide it is really you.</p></div>
+    <div class="card"><div class="n">STAGE 5 · IDENTITY FUSION</div><h3 style="margin-top:5px">Three weak signals combined into one confident decision</h3><p>The device does not use one sign of identity, it fuses three. Bluetooth signal strength from a registered phone gives proximity. A learned per-user model of weight and time-of-day gives a behavioural match. A rough biochemical baseline (the person's usual marker signature and concentration profile) gives a chemical match. Each produces a confidence score; the scores are combined, and only if the total clears a threshold is the reading attributed to that person. Below the threshold it is marked unverified and never scored. This is standard sensor fusion, the same idea a phone uses to decide it is really you.</p></div>
 
-    <div class="card"><div class="n">STAGE 6 · EDGE THEN CLOUD</div><h3 style="margin-top:5px">The device does the fast part, the cloud does the smart part</h3><p>The on-device microcontroller handles acquisition, calibration, temperature and dilution correction, and a first-pass in-range check, so it works even before it syncs. The corrected, identified reading is then sent encrypted to the cloud, which attaches it to the person's trend, runs the scoring model, checks thresholds, and drives the app and the physician dashboard. Data handling is built to be DPDP-compliant, and only consented data ever leaves the device.</p></div>
+    <div class="card"><div class="n">STAGE 6 · EDGE THEN CLOUD</div><h3 style="margin-top:5px">The device does the fast part, the cloud does the smart part</h3><p>The on-device microcontroller handles acquisition, calibration, temperature compensation and the sample-validity check, plus a first-pass in-range check, so it works even before it syncs. The corrected, identified reading is then sent encrypted to the cloud, which attaches it to the person's trend, runs the scoring model, checks thresholds, and drives the app and the physician dashboard. Data handling is built to be DPDP-compliant, and only consented data ever leaves the device.</p></div>
 
     <div class="card"><div class="n">STAGE 7 · THE CLEANING CONTROL LOOP</div><h3 style="margin-top:5px">Actuate, flush, then verify before re-arming</h3><p>After each use the controller drives a micro-pump and valves to run a water-jet rinse and a channel flush. A verification sensor then reads the cleaned channel against a clean baseline. Only when that check passes does the device re-arm to accept the next person. It is a closed control loop: act, measure, confirm, proceed.</p></div>
 
-    <div class="card"><div class="n">THE WHOLE PIPELINE, IN ONE LINE</div><h3 style="margin-top:5px">Sample to score</h3><p>Sample → electrode reaction → amplify and digitise → apply cartridge calibration and temperature compensation → correct for dilution → fuse identity → edge first-pass → encrypted sync → cloud trend, threshold and alert → app and physician view. Every arrow in that chain is an established, buildable step.</p></div>
+    <div class="card"><div class="n">THE WHOLE PIPELINE, IN ONE LINE</div><h3 style="margin-top:5px">Sample to score</h3><p>Bowl geometry separates urine from flush water → tap ~1 mL of clean urine into the cartridge → validity check on specific gravity (reject if outside 1.003–1.030) → electrode reaction → amplify and digitise → apply cartridge calibration and temperature compensation → fuse identity → edge first-pass → encrypted sync → cloud trend, threshold and alert → app and physician view. Every arrow in that chain is an established, buildable step.</p></div>
   </div>
 
-  <div class="call gold"><span class="cl">Honest technical note</span><p>The individual stages are all proven and commercial. The engineering work that remains is making them perform together inside a toilet: repeatability under 10 percent, detection limits below clinical thresholds after dilution, correction accuracy against lab references, and reliable identity fusion in a real household. These are validation tasks, listed on the Validation tab, not open research questions.</p></div>
+  <div class="call gold"><span class="cl">Honest technical note</span><p>The individual stages are all proven and commercial. The engineering work that remains is making them perform together in one fixture: separation efficiency measured on our own bowl geometry, repeatability under 10 percent, detection limits below clinical thresholds, agreement with hospital lab results, and reliable identity fusion in a real household. EOOS validated their geometry with infrared study of real voids plus a laboratory rig that reproduces male and female urination, and we would use the same method. These are validation tasks, listed on the Validation tab, not open research questions.</p></div>
 
   <div class="call teal"><span class="cl">The ask, in one line</span><p>A phase-gated raise: seed to launch the Lite variant and run an institutional pilot that generates clinical evidence, then Series A and B to add tiers and scale. The business earns on the recurring cartridge, not the hardware.</p></div>
 </section>
@@ -237,7 +237,7 @@
   <div class="grid g2">
     <div class="card"><div class="n">1 · THE PROBLEM IS HUGE AND GROWING</div><h3 style="margin-top:5px">Chronic disease, caught too late</h3><p>India has one of the world's largest diabetes and kidney-disease burdens, and screening is rare because it takes effort and a clinic. A test that costs the user nothing to take, every day, reaches people that annual check-ups miss.</p></div>
     <div class="card"><div class="n">2 · WHY NOW</div><h3 style="margin-top:5px">The pieces finally exist</h3><p>Cheap electrochemical sensors, reliable home connectivity, and Indian medical-device manufacturing under Make-in-India all exist today. The science was proven by Stanford in a peer-reviewed journal. Nothing here waits on a breakthrough.</p></div>
-    <div class="card"><div class="n">3 · THE MOAT IS REAL</div><h3 style="margin-top:5px">Molecular, corrected for dilution</h3><p>Every rival reads colour. We measure molecules and correct for how diluted the sample is. Copying that means new hardware, new chemistry and a new regulatory path, an estimated three-to-five-year effort. Four inventions are ours to patent.</p></div>
+    <div class="card"><div class="n">3 · THE MOAT IS REAL</div><h3 style="margin-top:5px">Quantified chemistry, on a clean sample</h3><p>Every rival reads colour and reports a category. We start from urine the bowl has already separated from flush water, then report real concentrations a clinician can act on. Copying that means new hardware, new chemistry and a new regulatory path, an estimated three-to-five-year effort.</p></div>
     <div class="card"><div class="n">4 · THE BUSINESS EARNS ON REPEAT</div><h3 style="margin-top:5px">Razor and blade, medical-grade</h3><p>The device is sold near cost. The cartridge, bought every month at roughly 58% margin, is the engine. Recurring revenue per active device is the part investors value most, and it compounds as the base grows.</p></div>
     <div class="card"><div class="n">5 · A CREDIBLE FIRST MARKET</div><h3 style="margin-top:5px">Institutions before homes</h3><p>Hospitals and elder-care feel the pain, pay on contract, and generate the clinical evidence that unlocks the consumer market. This is the professor's model and it de-risks the launch.</p></div>
     <div class="card"><div class="n">6 · MONEY IS SPENT IN STAGES</div><h3 style="margin-top:5px">Phase-gated, low blind risk</h3><p>Seed money proves the science in a pilot before big spend. Each round unlocks only after the prior milestone is hit, so capital is never committed to an unproven step.</p></div>
@@ -249,7 +249,7 @@
   <div class="tw"><table>
     <thead><tr><th>Question an investor asks</th><th>Honest answer</th><th>Risk &amp; mitigation</th></tr></thead>
     <tbody>
-      <tr><td>Does the core science work?</td><td><span class="chip g">Yes, proven</span> Electrochemical urine sensing and specific-gravity dilution correction are established, commercial methods.</td><td>Low risk. We apply known science, not new physics.</td></tr>
+      <tr><td>Does the core science work?</td><td><span class="chip g">Yes, proven</span> Electrochemical urine sensing is established, and passive urine separation by bowl geometry already ships commercially.</td><td>Low risk on the science. Remaining work is measuring separation efficiency on our own bowl, and licensing or designing around the existing urine-trap IP.</td></tr>
       <tr><td>Can it be built in India at cost?</td><td><span class="chip g">Yes</span> Every part has a named Indian supplier: ceramic, cartridge lines, electronics.</td><td>Low risk. Real quotes still needed; that is the cost worksheet's job.</td></tr>
       <tr><td>Will the readings be accurate enough?</td><td><span class="chip a">To be proven</span> Accuracy in a real bowl must be validated against lab references.</td><td>Medium risk. Mitigation: a bench partnership (IISc or IIT Madras) before scale.</td></tr>
       <tr><td>Can it tell family members apart?</td><td><span class="chip a">To be proven</span> The three-signal method is sound and used elsewhere.</td><td>Medium risk. Mitigation: pilot testing in real households, plus flag-and-skip when unsure.</td></tr>
@@ -258,6 +258,7 @@
     </tbody>
   </table></div>
   <div class="call teal"><span class="cl">The honest bottom line</span><p>The science is proven and the parts exist, so this is an engineering and validation effort, not a research gamble. The open items are all ordinary, testable, and funded in stages. That is exactly the risk profile a disciplined investor wants: real upside, and the unknowns are known, bounded, and being closed.</p></div>
+
 </section>
 
 <!-- ===== TAB 2: 3D NAVIGATOR ===== -->
@@ -283,7 +284,7 @@
   <div class="compdetail" id="compDetail">
     <div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">TAP A COMPONENT</div>
     <h3 style="margin-top:5px">The parts that make it a diagnostic device</h3>
-    <p class="body" style="margin-top:6px">A normal commode plus four things: a sealed sample zone, a sensor-and-cartridge module, a dilution sensor, and a self-cleaning system, all run by a small controller. Tap any part above to see its role.</p>
+    <p class="body" style="margin-top:6px">A commode whose bowl separates urine from flush water by shape alone, plus four things: a sample tap and sealed channel, a sensor-and-cartridge module, a validity sensor, and a self-cleaning system, all run by a small controller. Tap any part above to see its role.</p>
   </div>
   <div class="call gold" style="margin-top:16px"><span class="cl">Honest note</span><p>This is a demo model of the layout, not the final industrial design or a scan of a built unit. It is here to make the parts and their jobs clear.</p></div>
 </section>
@@ -292,25 +293,29 @@
 <section class="tab" data-title="Architecture" id="t-arch">
   <div class="eyebrow">Architecture, technical documentation and feasibility</div>
   <h2>How it works, in plain terms</h2>
-  <p class="sintro">The whole design rests on one choice: measure molecules electrochemically and correct them for dilution, instead of reading colour with a camera. Everything else follows from that. Each layer below is tagged by how proven it is, so nothing reads as a claim it has not earned.</p>
+  <p class="sintro">The whole design rests on one choice: let the bowl separate urine from flush water by its own shape, then measure molecules electrochemically on that clean sample, instead of reading colour off a diluted bowl. Everything else follows from that. Each layer below is tagged by how proven it is, so nothing reads as a claim it has not earned.</p>
 
-  <div class="call navy"><span class="cl">First, the simplest version</span><p>Think of the strip a diabetic dips in urine, or the sensor in a glucometer. Health Pod does the same kind of chemistry, but automatically, inside the toilet, once a day, and it fixes one problem those strips cannot: urine in a bowl is watered down, so the raw number looks too low. Health Pod measures how watered-down the sample is and corrects the number back to the true value. That correction is the clever part, and it is why our reading is trustworthy and a colour-strip is not.</p></div>
+  <div class="call navy"><span class="cl">First, the simplest version</span><p>Think of the strip a diabetic dips in urine, or the sensor in a glucometer. Health Pod does the same kind of chemistry, but automatically, inside the toilet, once a day. The key design decision is where the sample comes from, and the answer is not the bowl water. Bowl water would dilute a sample five to fifteen times over and make the reading meaningless. So the bowl itself is shaped to do the separating. Urine runs slowly and clings to the ceramic, so a curve in the bowl guides it into a hidden channel. Flush water moves fast, shoots straight past that channel, and goes down the main drain. It is the same reason tea dribbles down a teapot spout when you pour slowly but arcs cleanly when you pour fast. No pump, no sensor, no moving parts, and nothing for the user to do. The device then takes about a millilitre of that clean urine and tests it.</p></div>
 
   <h3 style="margin:6px 0 10px">How it works, in five everyday steps</h3>
   <div class="grid g3" style="margin-bottom:8px">
-    <div class="card"><div class="n">STEP 1</div><h3 style="margin-top:4px">A tiny sample is taken</h3><p>Once a day, a small amount of urine is drawn into a sealed channel, not the open bowl. Like a lab taking a drop, but automatic.</p></div>
+    <div class="card"><div class="n">STEP 1</div><h3 style="margin-top:4px">The bowl separates the urine</h3><p>The bowl’s shape guides slow-moving urine into a hidden channel, while fast flush water shoots past it to the drain. The device taps about a millilitre of that clean urine. Nothing for the user to do.</p></div>
     <div class="card"><div class="n">STEP 2</div><h3 style="margin-top:4px">The cartridge reacts</h3><p>The sample touches sensor pads in a replaceable cartridge. Each pad reacts to one marker, the same idea as a test strip, but read by the machine.</p></div>
     <div class="card"><div class="n">STEP 3</div><h3 style="margin-top:4px">It reads a number</h3><p>The device turns each reaction into a real number, not a colour. This is the difference between "looks a bit dark" and "5.4".</p></div>
-    <div class="card"><div class="n">STEP 4</div><h3 style="margin-top:4px">It corrects for water</h3><p>It measures how diluted the sample is and adjusts the number up to the true value. This is the step no rival has.</p></div>
+    <div class="card"><div class="n">STEP 4</div><h3 style="margin-top:4px">It checks the sample is valid</h3><p>It measures specific gravity to confirm the sample is concentrated enough to trust, the same check a lab runs. Outside the normal range it reports nothing rather than a wrong number.</p></div>
     <div class="card"><div class="n">STEP 5</div><h3 style="margin-top:4px">The phone shows it</h3><p>A simple in-range or out-of-range status and a trend appear in the app. A doctor is alerted only if something crosses a line.</p></div>
     <div class="card" style="background:var(--tealtint);border-color:var(--tealline)"><div class="n" style="color:var(--teal)">THE CARTRIDGE IDEA</div><h3 style="margin-top:4px">Like ink in a printer</h3><p>The printer is cheap; the ink is where the business is. Here the toilet is near cost; the monthly cartridge earns. It also unlocks which tests you get.</p></div>
   </div>
+
+  <div class="call rust"><span class="cl">A design change we made after review</span><p>An earlier version of this design sampled from the bowl and tried to correct mathematically for how diluted it was. Utkarsh challenged that on the numbers and he was right: a 200–400 mL void against 1.5–3 L of bowl water is a five-to-fifteen-fold dilution, which drops specific gravity to roughly 1.001–1.004, a range laboratories treat as invalid, and multiplying a small noisy reading by a large factor amplifies error instead of removing it. Tap-water chlorine and minerals made it worse.</p></div>
+
+  <div class="call teal"><span class="cl">Why the fix is a bowl, not a better formula</span><p>The first attempted fix was an intake that caught the stream directly. We dropped that too, because it depends on the user aiming, which is exactly why Withings requires the user to be seated and to start the test in the app. Instead we solve it with geometry. A urine-diverting bowl separates urine from flush water passively, using surface tension, with no moving parts and nothing for the user to do. It is not theoretical: Laufen sells this toilet today, developed with EOOS and the Swiss water institute Eawag, and reports that separation works for men, women and children. We are adding a diagnostic layer to a separation method that already works, rather than inventing a capture mechanism of our own. That is the single biggest reduction in technical risk in this project.</p></div>
 
   <div class="divider"></div>
   <h3 style="margin-bottom:10px">The same thing, in four technical layers</h3>
   <div class="grid g2">
     <div class="card"><div class="n">LAYER 1 · SENSING</div><h3>Electrochemical array <span class="eb proven">Proven chemistry</span></h3><p>An electrode array with enzyme and reagent pads in the cartridge reacts with the sample and produces a quantified value per marker. Enzyme glucose sensing is the most validated biosensor format there is.</p></div>
-    <div class="card"><div class="n">LAYER 2 · CORRECTION</div><h3>Dilution normalisation <span class="eb validate">Prove in-bowl</span></h3><p>A specific-gravity reading taken at the same moment corrects for how diluted the bowl sample is. The method is standard lab practice; proving it inside a toilet is the engineering to do.</p></div>
+    <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n" style="color:var(--teal)">LAYER 0 · PASSIVE SEPARATION</div><h3>Urine-diverting bowl geometry <span class="eb proven">Ships commercially</span></h3><p>A curve moulded into the bowl uses the teapot effect: slow urine clings to the ceramic and is guided into a concealed channel, fast flush water overshoots it and goes to the drain. No valve, no sensor, no moving parts, nothing for the user to do. Laufen save! ships this today and reports it works for men, women and children alike. Specific gravity then acts as a validity gate: outside 1.003 to 1.030, the sample is rejected.</p></div>
     <div class="card"><div class="n">LAYER 3 · READER</div><h3>Controller and self-clean <span class="eb proven">Standard parts</span></h3><p>Sealed electronics, a low-power microcontroller, Wi-Fi and BLE, and the cleaning system. No exotic parts, which is why India-first manufacture is realistic.</p></div>
     <div class="card"><div class="n">LAYER 4 · INTELLIGENCE</div><h3>App and cloud AI <span class="eb proven">Established</span></h3><p>Turns raw readings into a daily trend score with a physician dashboard. This is what users subscribe to. Raw output alone is not the product; the monitored trend is.</p></div>
   </div>
@@ -318,9 +323,9 @@
   <h2>Feasibility check, done honestly</h2>
   <div class="grid g2">
     <div class="card" style="border-color:var(--tealline)"><h3 style="color:var(--teal)">Already proven <span class="eb proven">Exists today</span></h3>
-      <p class="body">Electrochemical urine sensing is mature and commercial. Specific-gravity dilution correction is standard lab practice. Passive identification by proximity, pattern and biometrics exists in other health devices. None of this is speculative.</p></div>
+      <p class="body">Electrochemical urine sensing is mature and commercial. Specific-gravity validity limits are an established lab rule. Passive urine separation by bowl geometry is a shipping product (Laufen save!, developed with EOOS and Eawag), proven to work across men, women and children with no moving parts. Automated in-fixture sampling with a pump, microfluidic circuit, cartridge and air purge is also shipping (Withings U-Scan). None of this is speculative.</p></div>
     <div class="card" style="border-color:#E7D6A6"><h3 style="color:var(--gold)">Must be proven <span class="eb validate">Our work ahead</span></h3>
-      <p class="body">Repeatability under 10 percent in the bowl, detection limits below clinical thresholds after dilution, correction accuracy against lab references, zero carry-over after cleaning, and interference from vitamin C and cleaning agents. All ordinary engineering tasks, not fantasies.</p></div>
+      <p class="body">Separation efficiency and residual flush-water carry-over measured on our own bowl geometry, repeatability under 10 percent, detection limits below clinical thresholds, agreement with hospital lab results, zero carry-over between users after purge, and interference from vitamin C and cleaning agents. All ordinary engineering tasks, not fantasies.</p></div>
   </div>
   <div class="call teal"><span class="cl">How it gets validated</span><p>A bench validation partnership with an institution such as IISc Bangalore or IIT Madras, then a hospital pilot through the Institutional tier to confirm real-world performance. That pilot doubles as the clinical evidence buyers say they need.</p></div>
   <div class="call rust"><span class="cl">The one thing we will not claim</span><p>No accuracy figure is certified until this validation is done. Everything is labelled by evidence level so the design holds up when it is questioned.</p></div>
@@ -330,11 +335,12 @@
 <section class="tab" data-title="Biomarkers" id="t-bio">
   <div class="eyebrow">What the first variant tests</div>
   <h2>The MVP: a ten-marker urine panel</h2>
-  <p class="sintro">Health Pod Lite runs a standard ten-parameter urine screen, the same set a clinical dipstick covers, measured by the device and corrected for dilution. Specific gravity is both a marker and the reference used to correct the others.</p>
+  <p class="sintro">Health Pod Lite runs a standard ten-parameter urine screen, the same set a clinical dipstick covers, measured by the device on urine the bowl has already separated from flush water. Because the sample is never diluted, values are reported as concentrations, exactly as a lab reports them. Specific gravity is the validity check that decides whether a sample can be trusted at all.</p>
   <div class="grid g2">
     <div class="card"><h3>Glucose <span class="eb proven">Electrochemical</span></h3><p>Screens for diabetes and blood-sugar control. The most validated biosensor marker there is.</p></div>
     <div class="card"><h3>Protein / albumin <span class="eb validate">Reagent pad</span></h3><p>An early sign of kidney stress, important given India's diabetes and hypertension burden.</p></div>
-    <div class="card"><h3>Specific gravity <span class="eb proven">Reference</span></h3><p>Hydration level, and the dilution reference that makes every other reading trustworthy.</p></div>
+    <div class="card"><h3>Specific gravity <span class="eb proven">Validity gate</span></h3><p>Hydration level, and the validity check. Below 1.003 the sample is too dilute to trust, so the device rejects it and issues no result rather than reporting a bad number.</p></div>
+    <div class="card" style="border-color:#E7D6A6"><h3>Creatinine <span class="eb validate">Pro tier, deferred</span></h3><p>The clinical reference for spot urine, used to report albumin as an albumin-to-creatinine ratio, the standard kidney screening measure. It is deliberately not in the launch panel: electrochemical creatinine needs a three-enzyme cascade whose shelf life in Indian ambient conditions has to be proven first. It arrives with the Pro cartridge once that is validated.</p></div>
     <div class="card"><h3>pH <span class="eb proven">Electrochemical</span></h3><p>Metabolic and urinary-tract indicator; also flags risk of certain stones.</p></div>
     <div class="card"><h3>Ketones <span class="eb validate">Reagent pad</span></h3><p>Shows fat-burning metabolic state, relevant to diabetes and fasting.</p></div>
     <div class="card"><h3>Leukocytes <span class="eb validate">Reagent pad</span></h3><p>White blood cells, a marker of possible urinary-tract infection.</p></div>
@@ -343,7 +349,7 @@
     <div class="card"><h3>Bilirubin <span class="eb validate">Reagent pad</span></h3><p>A liver-function indicator.</p></div>
     <div class="card"><h3>Urobilinogen <span class="eb validate">Reagent pad</span></h3><p>A second liver-and-bile indicator, read alongside bilirubin.</p></div>
   </div>
-  <div class="call gold"><span class="cl">Honest note on method</span><p>Glucose, pH and specific gravity are the strongest electrochemical reads and carry the dilution-correction advantage. Several others start as reagent-pad reads, the same chemistry a dipstick uses, read by the device instead of by eye. Moving more of them to fully quantified electrochemical detection is validation work, not something claimed as finished.</p></div>
+  <div class="call gold"><span class="cl">Honest note on method</span><p>Glucose, pH and specific gravity are the strongest electrochemical reads. Several others start as reagent-pad reads, the same chemistry a dipstick uses, read by the device instead of by eye. Moving more of them to fully quantified electrochemical detection is validation work, not something claimed as finished.</p></div>
 </section>
 
 <!-- ===== TAB 5: SIMULATOR ===== -->
@@ -351,6 +357,158 @@
   <div class="eyebrow">Step-by-step simulator</div>
   <h2>One morning, five people, step by step</h2>
   <p class="sintro">Press Next to walk through a real morning, one moment at a time. The left panel is the toilet, the right is the user's phone, and they update together. The rail shows the seven events; click any to jump. It proves who is tested, who is not, and how the device decides.</p>
+
+  <style>
+  .mech{background:#0C1614;border:1px solid #16302a;border-radius:18px;overflow:hidden;margin-bottom:26px;box-shadow:0 24px 50px -34px rgba(20,40,34,.4)}
+  .mechhead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #16302a}
+  .mechhead .mt{font-family:var(--disp);font-weight:600;font-size:16px;color:#DFF7EC}
+  .mechlive{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--termgreen);text-transform:uppercase}
+  .mechlive .b{width:8px;height:8px;border-radius:50%;background:var(--termgreen);animation:blip 1.5s infinite}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  .mechbody{display:grid;grid-template-columns:1.5fr .9fr;gap:0}
+  @media(max-width:800px){.mechbody{grid-template-columns:1fr}}
+  .mechstage{position:relative;background:radial-gradient(120% 120% at 50% 0%,#12241e,#0a120f)}
+  .mechstage svg{display:block;width:100%;height:auto}
+  .mechpop{position:absolute;transform:translate(-50%,-50%);background:#EAFBF3;color:#0C2A20;border-radius:11px;padding:9px 12px;max-width:210px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 22px -8px rgba(0,0,0,.5);border:1px solid var(--termgreen);transition:left .5s,top .5s,opacity .3s;pointer-events:none;z-index:5}
+  .mechpop .pn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--mono);font-weight:600;font-size:11px;margin-right:6px}
+  .mechpop::after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--termgreen)}
+  .mechsteps{padding:16px;border-left:1px solid #16302a;display:flex;flex-direction:column;gap:7px;background:#0a120f}
+  @media(max-width:800px){.mechsteps{border-left:none;border-top:1px solid #16302a}}
+  .mstep{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:#5f8576;transition:.3s;opacity:.5}
+  .mstep.on{opacity:1;color:#DFF7EC}
+  .mstep .mn{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:1px solid #2c5648;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:#5f8576}
+  .mstep.on .mn{background:var(--termgreen);color:#031;border-color:var(--termgreen)}
+  .mstep.done .mn{border-color:var(--termgreen);color:var(--termgreen)}
+  .mctrl{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid #16302a;background:#0a120f}
+  .mbtn{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:none;border-radius:8px;padding:8px 14px;cursor:pointer}
+  .mbtn.play{background:var(--termgreen);color:#031}.mbtn.play:hover{filter:brightness(1.08)}
+  .mbtn.ghost{background:#12251f;color:#cfeee0;border:1px solid #23443a}.mbtn.ghost:hover{background:#16302a}
+  .mphase{font-family:var(--mono);font-size:11.5px;color:#5f8576;margin-left:auto}
+  </style>
+
+  <div class="mech" aria-label="Live mechanism animation">
+    <div class="mechhead"><span class="mt">How it works, live: the bowl separates urine from flush water</span><span class="mechlive"><span class="b"></span>Live</span></div>
+    <div class="mechbody">
+      <div class="mechstage" id="mechStage">
+        <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- ceramic bowl walls -->
+          <path d="M120,60 C 150,210 210,250 300,258" fill="none" stroke="#2c5648" stroke-width="3"/>
+          <path d="M410,60 C 392,190 372,240 336,256" fill="none" stroke="#2c5648" stroke-width="3"/>
+          <!-- diverter ridge -->
+          <path d="M300,258 Q 322,236 336,256" fill="none" stroke="#54E0A6" stroke-width="3"/>
+          <text x="318" y="228" fill="#54E0A6" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">diverter</text>
+          <!-- collection channel to cartridge (left) -->
+          <path d="M300,258 L 190,286 L 150,300" fill="none" stroke="#3f9ad6" stroke-width="10" stroke-linecap="round" opacity="0.35"/>
+          <!-- drain (right, down) -->
+          <path d="M336,256 L 356,320 L 360,404" fill="none" stroke="#3a5a52" stroke-width="12" stroke-linecap="round" opacity="0.4"/>
+          <!-- cartridge box -->
+          <rect x="70" y="292" width="80" height="52" rx="6" fill="#12241e" stroke="#54E0A6" stroke-width="1.5"/>
+          <rect id="cartFill" x="74" y="336" width="72" height="4" rx="2" fill="#54E0A6"/>
+          <text x="110" y="360" fill="#8fc7b3" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">cartridge</text>
+          <!-- drain label -->
+          <text x="392" y="400" fill="#5f8576" font-family="IBM Plex Mono" font-size="10">to drain</text>
+          <!-- guide labels -->
+          <text x="150" y="80" fill="#E0A82E" font-family="IBM Plex Mono" font-size="11">urine · slow</text>
+          <text x="360" y="80" fill="#3f9ad6" font-family="IBM Plex Mono" font-size="11">flush · fast</text>
+          <!-- phone -->
+          <rect x="470" y="150" width="72" height="132" rx="12" fill="#12241e" stroke="#23443a" stroke-width="2"/>
+          <g id="phoneResult" opacity="0">
+            <circle cx="506" cy="196" r="17" fill="none" stroke="#54E0A6" stroke-width="4"/>
+            <path d="M498,196 l6,6 l11,-13" fill="none" stroke="#54E0A6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="506" y="238" fill="#DFF7EC" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">5.4 mmol/L</text>
+            <text x="506" y="254" fill="#54E0A6" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">in range</text>
+          </g>
+          <text x="506" y="216" id="phoneWait" fill="#3f6e5e" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">phone</text>
+          <g id="mechParticles"></g>
+          <g id="cleanTick" opacity="0"><text x="150" y="286" fill="#54E0A6" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">channel clean ✓</text></g>
+        </svg>
+        <div class="mechpop" id="mechPop" style="left:50%;top:14%;opacity:0"><span class="pn" id="mechPopN">1</span><span id="mechPopT">Someone sits down</span></div>
+      </div>
+      <div class="mechsteps" id="mechSteps"></div>
+    </div>
+    <div class="mctrl">
+      <button class="mbtn play" id="mechPlay">❚❚ Pause</button>
+      <button class="mbtn ghost" id="mechRestart">⟲ Restart</button>
+      <span class="mphase" id="mechPhase">Live view</span>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var UP=[[300,70],[296,150],[290,210],[300,254],[300,258],[190,286],[150,300]];
+    var WP=[[360,70],[358,150],[352,220],[344,252],[356,320],[360,404]];
+    var phases=[
+      {t:0.0, step:0, label:'Someone sits down. The device wakes but does nothing yet.', ax:50, ay:13},
+      {t:2.0, step:1, label:'Urine flows slowly and clings to the ceramic surface.', ax:52, ay:40},
+      {t:5.5, step:2, label:'The diverter curve guides that slow flow into a hidden channel.', ax:40, ay:60},
+      {t:8.5, step:3, label:'About 1 mL is drawn into the cartridge. The rest goes on to drain.', ax:20, ay:70},
+      {t:11.0,step:4, label:'Validity check: specific gravity 1.018, inside the trusted range.', ax:26, ay:44},
+      {t:13.0,step:5, label:'Measured, then the result appears on the phone.', ax:90, ay:34},
+      {t:15.0,step:6, label:'Flush water moves fast, overshoots the diverter, straight to the drain.', ax:64, ay:74},
+      {t:18.5,step:7, label:'Channel purged and verified clean, ready for the next person.', ax:32, ay:70}
+    ];
+    var steplabels=['Seated','Urine clings to the bowl','Diverted to a hidden channel','1 mL to the cartridge','Validity check','Result on the phone','Flush water to the drain','Purged and verified clean'];
+    var T=21.0;
+    var stepsEl=document.getElementById('mechSteps');
+    steplabels.forEach(function(s,i){
+      var d=document.createElement('div'); d.className='mstep'; d.id='mstep'+i;
+      d.innerHTML='<span class="mn">'+(i+1)+'</span><span>'+s+'</span>'; stepsEl.appendChild(d);
+    });
+    var pg=document.getElementById('mechParticles'), pop=document.getElementById('mechPop'),
+        popN=document.getElementById('mechPopN'), popT=document.getElementById('mechPopT'),
+        cartFill=document.getElementById('cartFill'), phoneRes=document.getElementById('phoneResult'),
+        phoneWait=document.getElementById('phoneWait'), cleanTick=document.getElementById('cleanTick'),
+        stage=document.getElementById('mechStage'), playBtn=document.getElementById('mechPlay'),
+        restartBtn=document.getElementById('mechRestart'), phaseLbl=document.getElementById('mechPhase');
+    var drops=[];
+    function lerp(pts,f){var n=pts.length-1;var s=Math.min(Math.floor(f*n),n-1);var lf=f*n-s;
+      return [pts[s][0]+(pts[s+1][0]-pts[s][0])*lf, pts[s][1]+(pts[s+1][1]-pts[s][1])*lf];}
+    function spawn(path,dur,color,r){
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('r',r); c.setAttribute('fill',color); pg.appendChild(c);
+      drops.push({el:c,path:path,born:clock,dur:dur});
+    }
+    function phaseAt(t){var p=phases[0];for(var i=0;i<phases.length;i++){if(t>=phases[i].t)p=phases[i];}return p;}
+    var clock=0, last=0, playing=true, lastU=-1, lastW=-1;
+    function reset(){drops.forEach(function(d){if(d.el.parentNode)d.el.parentNode.removeChild(d.el);});drops=[];clock=0;lastU=-1;lastW=-1;}
+    function frame(ts){
+      if(!playing){last=ts;requestAnimationFrame(frame);return;}
+      if(!last)last=ts; var dt=(ts-last)/1000; last=ts;
+      if(dt>0.1)dt=0.1;
+      clock+=dt; if(clock>=T){reset();}
+      // spawn urine during [2,8.7)
+      if(clock>=2&&clock<8.7){ if(clock-lastU>0.34){spawn(UP,2.6,'#E0A82E',4.5);lastU=clock;} }
+      // spawn flush during [15,18.5)
+      if(clock>=15&&clock<18.5){ if(clock-lastW>0.16){spawn(WP,1.05,'#3f9ad6',3.5);lastW=clock;} }
+      // update drops
+      for(var i=drops.length-1;i>=0;i--){var d=drops[i];var f=(clock-d.born)/d.dur;
+        if(f>=1){if(d.el.parentNode)d.el.parentNode.removeChild(d.el);drops.splice(i,1);continue;}
+        var p=lerp(d.path,f); d.el.setAttribute('cx',p[0]); d.el.setAttribute('cy',p[1]);
+        d.el.setAttribute('opacity',f<0.1?f*10:(f>0.85?(1-f)*6.6:1));}
+      // cartridge fill 8.5..11
+      var fill=Math.max(0,Math.min(1,(clock-8.5)/2.5)); if(clock>=T-0.05)fill=0;
+      cartFill.setAttribute('height',4+fill*44); cartFill.setAttribute('y',336-fill*44+4);
+      // phone result from 13
+      var pr=(clock>=13)?1:0; phoneRes.setAttribute('opacity',pr); phoneWait.setAttribute('opacity',pr?0:1);
+      // clean tick from 18.5
+      cleanTick.setAttribute('opacity',(clock>=18.5)?1:0);
+      // popup + steps
+      var ph=phaseAt(clock);
+      pop.style.left=ph.ax+'%'; pop.style.top=ph.ay+'%'; pop.style.opacity=1;
+      popN.textContent=ph.step+1; popT.textContent=ph.label;
+      for(var s=0;s<steplabels.length;s++){var el=document.getElementById('mstep'+s);
+        el.classList.toggle('on',s===ph.step); el.classList.toggle('done',s<ph.step);}
+      phaseLbl.textContent='Step '+(ph.step+1)+' of 8';
+      requestAnimationFrame(frame);
+    }
+    playBtn.addEventListener('click',function(){playing=!playing;playBtn.textContent=playing?'❚❚ Pause':'▶ Play';});
+    restartBtn.addEventListener('click',function(){reset();playing=true;playBtn.textContent='❚❚ Pause';});
+    if(reduce){playing=false;playBtn.textContent='▶ Play';clock=13;}
+    requestAnimationFrame(frame);
+  })();
+  </script>
+
   <div class="sim">
     <div class="rail" id="rail" role="tablist" aria-label="Morning events"></div>
     <div class="stage">
@@ -412,8 +570,8 @@
     <thead><tr><th>Survey finding</th><th>What it means</th><th>How we addressed it</th></tr></thead>
     <tbody>
       <tr><td><strong>71% would buy only if clinically validated</strong></td><td>Trust is the real barrier, not interest</td><td>Institutional-first go-to-market. The hospital pilot generates the clinical evidence before any wide consumer push. Validation is the plan, not an afterthought.</td></tr>
-      <tr><td><strong>Most expect the device under ₹50,000</strong></td><td>Price sensitivity is high</td><td>Aggressive hardware pricing at ₹55k–75k on a thin margin, with the cartridge carrying profit. A lower-cost clip-on option is kept for budget buyers. The gap to ₹50k is flagged honestly, not hidden.</td></tr>
-      <tr><td><strong>31% held back by uncertainty about the technology</strong></td><td>People do not understand or trust the tech yet</td><td>Plain-language results, a visible dilution-correction step, and physician involvement in the loop. The simulator and this demo exist partly to remove that uncertainty.</td></tr>
+      <tr><td><strong>Most expect the device under ₹50,000</strong></td><td>Price sensitivity is high</td><td>The MVP is priced at ₹70,000, close to its true cost once the one-time investment is shared across the first units, with the cartridge carrying the profit. The gap to the ₹50,000 many people expect is flagged honestly, not hidden, and it closes as volume grows.</td></tr>
+      <tr><td><strong>31% held back by uncertainty about the technology</strong></td><td>People do not understand or trust the tech yet</td><td>Plain-language results, a visible sample-validity and normalisation step, and physician involvement in the loop. The simulator and this demo exist partly to remove that uncertainty.</td></tr>
       <tr><td><strong>Strong interest from elder-care and clinics</strong></td><td>Institutions feel the pain most</td><td>Institutional tier is the launch wedge: lease pricing, ward mode, and an annual contract. This matches the professor's B2B2C-first revenue model.</td></tr>
       <tr><td><strong>Privacy raised repeatedly</strong></td><td>A shared health device worries people</td><td>Private by default, passive identification, guests never tested, and DPDP-compliant data handling. The whole identity design answers this.</td></tr>
     </tbody>
@@ -429,6 +587,7 @@
   <div class="tw"><table>
     <thead><tr><th>Raised by</th><th>The point</th><th>How it is addressed</th><th>Status</th></tr></thead>
     <tbody>
+      <tr><td><strong>Utkarsh</strong></td><td><strong>Bowl-water dilution makes the readings invalid.</strong> A void is 200–400 mL against 1.5–3 L of bowl water, so specific gravity lands near 1.001–1.004, which labs class as invalid. Multiplying a small noisy number by a 5–15× factor amplifies error rather than removing it. Tap-water chlorine and minerals also shift the baseline and can interfere.</td><td><strong>Design changed twice.</strong> First we moved to a stream intake, then dropped that too because it depends on the user aiming, which is why Withings requires seated use plus an app launch. The design now uses a urine-diverting bowl: slow urine is guided by surface tension into a concealed channel while fast flush water overshoots to the drain. This is the teapot effect, it has no moving parts, and Laufen ships it today with separation reported to work for men, women and children. Specific gravity became a validity gate rather than a correction factor, and creatinine was deferred to the Pro tier. Honest consequence: the urine trap is EOOS and Laufen IP, so we licence or design around it, and seated use is a real limitation we now state openly.</td><td><span class="chip g">Addressed</span></td></tr>
       <tr><td>Deepak</td><td>Identify which household member is being tested</td><td>Three-signal passive identification: phone proximity, weight-and-time pattern, biochemical fingerprint. Conflicts are flagged unverified and not scored.</td><td><span class="chip g">Addressed</span></td></tr>
       <tr><td>Somnath</td><td>Use replaceable cartridges; sensor and cartridge cost is the main risk</td><td>Cartridge is the consumable and the tier-unlock. Its cost is flagged as the top COGS item to validate with real quotes in the cost model.</td><td><span class="chip a">In progress</span></td></tr>
       <tr><td>Utkarsh</td><td>SaaS logic unclear; unit economics; alert fatigue</td><td>Three-layer model spelled out; ambient-by-default alerts fire only on a threshold breach; unit costs marked as targets pending quotes.</td><td><span class="chip g">Addressed</span></td></tr>
@@ -476,7 +635,8 @@
       <tr><td>Cartridge dock + reader interface</td><td>Reads cartridge; drives tier unlock</td><td>₹700–1,100</td></tr>
       <tr><td>Main PCB + microcontroller</td><td>Runs cycle logic, cleaning, edge scoring</td><td>₹900–1,400</td></tr>
       <tr><td>Connectivity (Wi-Fi + BLE)</td><td>App sync and phone-proximity identification</td><td>₹350–600</td></tr>
-      <tr><td>Dilution / specific-gravity front end</td><td>The core moat; corrects every reading</td><td>₹500–900</td></tr>
+      <tr><td>Urine-diverting bowl geometry (tooling + licence)</td><td>Separates urine from flush water passively; may carry a licence fee</td><td>₹900–1,600</td></tr>
+      <tr><td>Sample tap, pump + validity sensor</td><td>Draws ~1 mL from the diverted flow; rejects invalid samples</td><td>₹600–1,000</td></tr>
       <tr><td>Weight / presence sensor</td><td>Occupancy trigger and passive identification</td><td>₹300–500</td></tr>
       <tr><td>Cleaning subsystem (pump, valves, jets)</td><td>Rinse and flush after every use</td><td>₹1,200–1,800</td></tr>
       <tr><td>Verification sensor</td><td>Confirms no carry-over before next sample</td><td>₹250–450</td></tr>
@@ -494,7 +654,7 @@
     <tbody>
       <tr><td>Substrate + printed electrode array</td><td>The electrochemical sensing element</td><td>₹55–110</td></tr>
       <tr><td>Enzyme + reagent pads (10 markers)</td><td>Chemistry that reacts with each marker</td><td>₹90–150</td></tr>
-      <tr><td>Dilution reagent + microfluidic layer</td><td>Correction reference; routes the sample</td><td>₹40–75</td></tr>
+      <tr><td>Microfluidic layer + validity reagent</td><td>Routes the sample; supports the validity check</td><td>₹35–70</td></tr>
       <tr><td>Authentication chip</td><td>Unlocks the tier; blocks counterfeits</td><td>₹35–60</td></tr>
       <tr><td>Housing, sterile seal, packaging</td><td>Protects and stabilises the cartridge</td><td>₹40–80</td></tr>
       <tr><td>Fill, assembly, QC, shelf-life</td><td>Building, checking, proving expiry</td><td>₹50–90</td></tr>
@@ -527,7 +687,22 @@
       <tr><td>Contingency + cost of capital</td><td>Estimates are uncertain; capex has a financing cost</td><td>10–15% + funding terms</td></tr>
     </tbody>
   </table></div>
-  <div class="call teal"><span class="cl">How the price holds together</span><p>Direct materials are roughly ₹11,000–17,000. Once labour, QC, calibration, tooling amortisation, freight, warranty and channel margin are added, the fully-loaded hardware cost lands near ₹33,000, which is why the ₹55,000–75,000 commode carries only a modest margin. The cartridge, made for ₹350–450 and sold at ₹899–1,199 at around 58% margin, is what actually earns. That is why the business leans on the consumable.</p></div>
+  <h3 style="margin:6px 0 10px">How the ₹70,000 MVP price is built up</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Cost element</th><th>Per unit (₹)</th><th>What it covers</th></tr></thead>
+    <tbody>
+      <tr><td>Direct materials (hardware BOM)</td><td>~16,000</td><td>Ceramic, diverting bowl, sensors, electronics, cleaning</td></tr>
+      <tr><td>Assembly, QC, calibration</td><td>~2,000</td><td>Building and testing each unit</td></tr>
+      <tr><td>Freight + installation</td><td>~3,000</td><td>Shipping the ceramic and a plumber fit</td></tr>
+      <tr><td>Yield allowance (5%)</td><td>~800</td><td>Normal production defects</td></tr>
+      <tr><td><strong>Direct build cost</strong></td><td><strong>~21,800</strong></td><td>What one unit costs to make and land</td></tr>
+      <tr><td>Share of one-time investment, at MVP volume</td><td>~24,000</td><td>Tooling, software, clinical study, regulatory and IP, spread across the first ~1,500 units</td></tr>
+      <tr><td><strong>Loaded cost per unit (MVP)</strong></td><td><strong>~45,800</strong></td><td>High early, because setup spreads over few units</td></tr>
+      <tr><td><strong>MVP retail price</strong></td><td><strong>70,000</strong></td><td>About 35% gross, most of which recovers the one-time spend early</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">Does this fit the professor's revenue model? Yes.</span><p>Layer 1, the ₹70,000 hardware, is priced to recover build cost plus a share of the one-time investment, not to maximise margin. That is the "hardware near cost" idea at MVP scale. Layer 2, the cartridge made for ₹350–450 and sold at ₹899–1,199 at around 58% margin, is the recurring engine. Layer 3, the app and physician dashboard, deepens it. Institutions come first, consented data last. The urine-diverting design does not change any of this; it strengthens Layer 2, because a valid sample is what makes the cartridge worth paying for.</p></div>
+  <div class="call gold"><span class="cl">Honest note on the number</span><p>The ₹24,000 setup share depends on how many units the one-time investment is spread over. At 1,500 MVP units it is about ₹24,000; at higher volume it falls fast and hardware margin improves. The editable worksheet lets the team change that assumption and watch the price and margin move. Every figure here is indicative, pending real supplier quotes.</p></div>
 </section>
 
 <!-- ===== TAB 10: REVENUE MODEL (professor's) ===== -->
@@ -536,7 +711,7 @@
   <h2>Three layers, institutions first, cartridge-led</h2>
   <p class="sintro">This tab is the revenue model as the professor framed it, kept separate on purpose. The product is built in the same three layers it earns from, so how it is made and how it earns are the same shape.</p>
   <div class="grid g3">
-    <div class="card"><div class="n">LAYER 1 · HARDWARE</div><h3 style="margin-top:5px">The commode</h3><p style="margin-top:6px"><strong>₹55k–75k</strong> sale near cost, or a monthly lease for institutions. Thin margin by design. This removes the barrier; it is not where the profit sits.</p></div>
+    <div class="card"><div class="n">LAYER 1 · HARDWARE</div><h3 style="margin-top:5px">The commode</h3><p style="margin-top:6px"><strong>₹70,000</strong> for the MVP, priced to recover build cost plus a share of the one-time investment, not to maximise margin. That is the "near cost" idea at MVP scale. Institutions can also lease. Profit does not sit here.</p></div>
     <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n">LAYER 2 · CONSUMABLE</div><h3 style="margin-top:5px">The cartridge</h3><p style="margin-top:6px"><strong>₹899–1,199 / month</strong> at 55–65% margin. Recurring, per active device. This is the financial centre of the business.</p></div>
     <div class="card"><div class="n">LAYER 3 · INTELLIGENCE</div><h3 style="margin-top:5px">The subscription</h3><p style="margin-top:6px">Tiered SaaS for AI scoring and the physician dashboard, plus enterprise contracts. Without it the device gives raw readings only.</p></div>
   </div>
@@ -569,21 +744,28 @@
 </section>
 
 <!-- ===== TAB 11: COMPETITION ===== -->
-<section class="tab" data-title="Competition" id="t-comp">
-  <div class="eyebrow">Market competition</div>
-  <h2>Colour readers versus a corrected molecular instrument</h2>
-  <p class="sintro">Every major player reads colour or images and reports a handful of parameters without naming a molecule. Health Pod measures molecules and corrects for dilution. Details are from the companies' own public product information.</p>
+<section class="tab" data-title="Market positioning" id="t-comp">
+  <div class="eyebrow">Market positioning · the MVP, function by function</div>
+  <h2>What our MVP does that the others cannot</h2>
+  <p class="sintro">This compares the launch MVP against the products people will name, capability by capability. It is about what the first product does today, not tiers or future features. Details are from each company's public product information. Legend: check means yes, tilde means partial, cross means no.</p>
   <div class="tw"><table>
-    <thead><tr><th>Product</th><th>Method</th><th>Parameters</th><th>Clinical numbers?</th><th>Price position</th></tr></thead>
+    <thead><tr><th>Capability</th><th>Health Pod MVP</th><th>Withings U-Scan</th><th>Kohler Dekoda</th><th>TOTO</th><th>Throne</th></tr></thead>
     <tbody>
-      <tr><td>Withings U-Scan</td><td>Optical / colour cartridge</td><td>A few</td><td>No, colour category</td><td>Premium clip-on</td></tr>
-      <tr><td>Kohler Dekoda</td><td>Optical / imaging</td><td>Few</td><td>No molecular value</td><td>Premium add-on</td></tr>
-      <tr><td>TOTO</td><td>Sensor / wellness</td><td>0 to 2</td><td>No</td><td>Premium toilet</td></tr>
-      <tr><td>Throne</td><td>Optical camera</td><td>Imaging only</td><td>No panel</td><td>Niche consumer</td></tr>
-      <tr><td style="background:var(--tealtint)"><strong>Health Pod</strong></td><td style="background:var(--tealtint)"><strong>Electrochemical + dilution correction</strong></td><td style="background:var(--tealtint)">Up to ~28 across tiers</td><td style="background:var(--tealtint)"><span class="chip g">Yes, corrected</span></td><td style="background:var(--tealtint)">₹55k–75k, cartridge-led</td></tr>
+      <tr><td>The toilet itself, not a clip-on or add-on</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ full commode</td><td>✕ clip-on</td><td>✕ add-on</td><td>✓ toilet</td><td>✕ device</td></tr>
+      <tr><td>Separates urine from flush water, so the sample is not diluted</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓</td><td>✕</td><td>✕</td><td>✕</td><td>✕</td></tr>
+      <tr><td>Nothing to aim at, press, or launch in an app</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ passive</td><td>✕ seated + app</td><td>~</td><td>n/a</td><td>✕</td></tr>
+      <tr><td>Quantified numeric marker values</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ electrochemical</td><td>~ optical, limited</td><td>✕ imaging</td><td>✕</td><td>✕ imaging</td></tr>
+      <tr><td>Ten-marker urinalysis panel</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ 10 markers</td><td>~ a few</td><td>✕</td><td>0 to 2</td><td>✕</td></tr>
+      <tr><td>Tells household members apart automatically</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ passive ID</td><td>✕ single user</td><td>✕</td><td>✕</td><td>✕</td></tr>
+      <tr><td>Guests never tested, consent-gated privacy</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓</td><td>✕</td><td>✕</td><td>n/a</td><td>✕</td></tr>
+      <tr><td>Rejects an invalid, too-dilute sample</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓ validity gate</td><td>✕</td><td>✕</td><td>✕</td><td>✕</td></tr>
+      <tr><td>Result and trend to phone, physician alert on threshold</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓</td><td>~ app trend</td><td>~</td><td>✕</td><td>~</td></tr>
+      <tr><td>Self-clean and verify between users</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">✓</td><td>~ flush-clean</td><td>~</td><td>n/a</td><td>✕</td></tr>
+      <tr><td>Price</td><td style="background:var(--tealtint);font-weight:600;color:var(--teal)">₹70,000, cartridge-led</td><td>Premium + subscription</td><td>Premium add-on</td><td>Premium</td><td>Niche</td></tr>
     </tbody>
   </table></div>
-  <div class="call teal"><span class="cl">The moat, in one line</span><p>Moving from optical to molecular needs different hardware, different chemistry and a new regulatory pathway, an estimated three-to-five-year re-engineering effort for any incumbent, so a colour-strip competitor cannot simply copy this.</p></div>
+  <div class="call teal"><span class="cl">The one-line position</span><p>The others are accessories or non-diagnostic toilets. Our MVP is the only one that is the toilet itself, separates the sample so it is not diluted, reports quantified numbers across a ten-marker panel, and tells household members apart while never testing guests. No competitor does all four, and most do none. A clip-on cannot copy the separation without becoming a toilet, and an optical reader cannot copy the chemistry without a three-to-five-year rebuild.</p></div>
+  <div class="call gold"><span class="cl">Fair to the competition</span><p>Withings is a real, shipping product with a polished app and genuine convenience for one user, and it reports several useful readings. Our advantage is not that they are weak; it is that a built-in diverting fixture solves problems a clip-on structurally cannot: dilution, multi-user households, and passive use with nothing to trigger.</p></div>
 </section>
 
 <!-- ===== TAB 12: INNOVATION & PATENTS ===== -->
@@ -597,9 +779,9 @@
     <div class="card" style="background:var(--rusttint);border-color:#E6C9C6"><div class="n" style="color:var(--rust)">WHAT WE AVOID ON PURPOSE</div>
       <p style="margin-top:8px">✕ No broad smart-toilet claim (Stanford's category).<br>✕ No in-bowl camera or stool imaging (Stanford).<br>✕ No optical clip-on copy (Withings).<br>✕ No borrowed branding or wording.</p></div>
     <div class="card" style="background:var(--tealtint);border-color:var(--tealline)"><div class="n" style="color:var(--teal)">WHAT IS GENUINELY OURS</div>
-      <p style="margin-top:8px">✓ Dilution-normalised in-situ panel.<br>✓ Capability-unlocking cartridge.<br>✓ Consent-gated activation.<br>✓ Between-user reset verification.</p></div>
+      <p style="margin-top:8px">✓ Diagnostic integration into a urine-diverting fixture.<br>✓ Capability-unlocking cartridge.<br>✓ Consent-gated activation.<br>✓ Between-user reset verification.</p></div>
   </div>
-  <div class="call navy"><span class="cl">The plain verdict</span><p>The competitors are colour or image readers. Health Pod is a corrected molecular instrument built into the commode, that scales tier by tier through the cartridge and protects every user through consent-gated testing. That specific combination is not offered by any product on the market. It is our own concept and design.</p></div>
+  <div class="call navy"><span class="cl">The plain verdict</span><p>The competitors are colour or image readers, or non-diagnostic toilets. Our MVP is the commode itself, separating urine from flush water by shape, reporting quantified numbers across a ten-marker panel, and protecting every user through consent-gated testing. That specific combination is not offered by any product on the market. It is our own concept and design.</p></div>
 
   <div class="divider"></div>
   <h2>Patent provisioning</h2>
@@ -608,12 +790,50 @@
     <thead><tr><th>Candidate invention</th><th>Strength</th><th>Why it is defensible and ours</th></tr></thead>
     <tbody>
       <tr><td><strong>Capability-unlocking cartridge</strong></td><td><span class="chip g">Strongest</span></td><td>A cartridge with a combined physical and electronic key that unlocks dormant sensor banks, so one base becomes Lite, Pro or Max by cartridge alone. Primary filing candidate.</td></tr>
-      <tr><td><strong>Dilution-normalised in-situ panel</strong></td><td><span class="chip g">Strong</span></td><td>Quantified electrochemical measurement corrected for real-time bowl-water dilution. No optical competitor can do this. Grounded in physics.</td></tr>
+      <tr><td><strong>Diagnostic integration into a urine-diverting fixture</strong></td><td><span class="chip a">Moderate</span></td><td>An electrochemical multi-marker panel sampled in-line from a passively diverted urine channel, with an automatic validity gate that suppresses a result rather than reporting an untrustworthy one. Stated plainly: the urine trap itself is <strong>not ours</strong>. It was invented by EOOS and is commercialised by Laufen. Our claim is limited to the in-line diagnostic sampling, validity suppression and tier-unlock layered on top of a diverting fixture. Anything broader would fail a search.</td></tr>
       <tr><td><strong>Consent-gated activation</strong></td><td><span class="chip a">Moderate</span></td><td>Sensor activation tied to a per-user consent and identity state, so guests are physically never tested.</td></tr>
       <tr><td><strong>Between-user reset verification</strong></td><td><span class="chip a">Moderate</span></td><td>A flush-then-verify sequence that confirms the channel is clean before accepting the next sample.</td></tr>
     </tbody>
   </table></div>
-  <div class="call gold"><span class="cl">The honest caveat</span><p>The idea of a consumable that unlocks functions also exists in other industries, such as printers and lab analysers. A registered patent agent must run a full cross-field search before we file. Nothing here is granted yet. What we have is a clean, defensible position and four candidates worth filing on. The provisioning plan: file provisionals on the top two first, then full filings, with an optional PCT for international cover.</p></div>
+  <div class="call gold"><span class="cl">The honest caveat</span><p>The idea of a consumable that unlocks functions also exists in other industries, such as printers and lab analysers. In-bowl automated sampling is already commercial (Withings), and passive urine diversion is already commercial and patented (EOOS / Laufen save!). A registered patent agent must run a full cross-field search before we file, and claims must be drafted narrowly around what is genuinely ours rather than the general category. Realistically, the urine-diverting geometry is something we license or design around, not something we claim. Nothing here is granted yet. What we have is a clean, defensible position and four candidates worth filing on. The provisioning plan: file provisionals on the top two first, then full filings, with an optional PCT for international cover.</p></div>
+  <div class="call teal"><span class="cl">This turns an IP problem into a partnership</span><p>The professor asked for strategic partners. A urine-diverting bowl is made by sanitaryware companies; a diagnostic layer is made by us. That is a natural licence or co-development deal rather than a fight. Laufen and its parent Roca already have the geometry, and Indian makers such as Hindware, Cera and Jaquar have the ceramic capability to build under licence. It also cuts our tooling risk, because we would not be inventing bowl hydrodynamics from scratch.</p></div>
+</section>
+
+<!-- ===== TAB: FUTURE SCOPE ===== -->
+<section class="tab" data-title="Future scope" id="t-future">
+  <div class="eyebrow">Future scope · after the MVP</div>
+  <h2>Where it can go next, and what is realistically feasible</h2>
+  <p class="sintro">For BPP we build and prove the MVP: one urine panel, done well. This tab is the honest roadmap beyond it. It separates what the same urine platform can add with cartridge work, from what needs new capture hardware and heavy research. Nothing here is in the MVP.</p>
+
+  <h3 style="margin:6px 0 10px">Feasible next, on the same urine platform</h3>
+  <div class="grid g2">
+    <div class="card" style="border-color:var(--tealline)"><div class="n" style="color:var(--teal)">FEASIBLE · CARTRIDGE WORK</div><h3 style="margin-top:5px">Pregnancy (hCG)</h3><p>Detecting the pregnancy hormone hCG in urine with an electrochemical sensor is established in published research, on real urine samples, at clinical levels. It is a new cartridge chemistry on the same device, not a redesign.</p></div>
+    <div class="card" style="border-color:var(--tealline)"><div class="n" style="color:var(--teal)">FEASIBLE · CARTRIDGE WORK</div><h3 style="margin-top:5px">Fertility and hormones (LH)</h3><p>Ovulation (LH) and related hormones are urine-detectable by the same immunosensor approach. A natural women's-health cartridge.</p></div>
+    <div class="card" style="border-color:var(--tealline)"><div class="n" style="color:var(--teal)">FEASIBLE · CARTRIDGE WORK</div><h3 style="margin-top:5px">Expanded kidney and liver panel</h3><p>Albumin-to-creatinine ratio and more kidney and liver markers, once the creatinine cascade is proven shelf-stable in Indian conditions.</p></div>
+    <div class="card" style="border-color:var(--tealline)"><div class="n" style="color:var(--teal)">FEASIBLE · CARTRIDGE WORK</div><h3 style="margin-top:5px">Electrolytes and hydration</h3><p>Sodium, potassium and hydration markers extend the everyday-wellness value with no new hardware.</p></div>
+  </div>
+
+  <h3 style="margin:22px 0 10px">Longer-term, heavy research, still urine</h3>
+  <div class="grid g2">
+    <div class="card" style="border-color:#E7D6A6"><div class="n" style="color:var(--gold)">RESEARCH-STAGE</div><h3 style="margin-top:5px">Early cancer signals in urine</h3><p>Some urine biomarkers for bladder and prostate risk exist in research. Promising, but not established screening. It would need large clinical validation before any claim, and we would not promise it as a product yet.</p></div>
+    <div class="card" style="border-color:#E7D6A6"><div class="n" style="color:var(--gold)">RESEARCH-STAGE</div><h3 style="margin-top:5px">Metabolic and nutrition profiling</h3><p>Broader metabolite panels for diet and metabolic health, feasible in principle, dependent on validated markers and stable cartridge chemistry.</p></div>
+  </div>
+
+  <h3 style="margin:22px 0 10px">Needs new capture hardware, not a cartridge swap</h3>
+  <div class="grid g2">
+    <div class="card" style="border-color:#E6C9C6;background:var(--rusttint)"><div class="n" style="color:var(--rust)">HARDWARE + HEAVY R&amp;D</div><h3 style="margin-top:5px">Colon cancer screening, the honest limit</h3><p>Colon cancer screening is a stool test. The fecal immunochemical test and stool-DNA tests detect it, and they need a stool sample. Our bowl diverts urine and does not capture stool. Adding this means a separate stool-sampling module and major research, closer to what the Stanford research toilet attempted. It is a real future direction, but a hardware-level step, not something the MVP or a cartridge can do.</p></div>
+    <div class="card" style="border-color:#E6C9C6;background:var(--rusttint)"><div class="n" style="color:var(--rust)">HARDWARE + HEAVY R&amp;D</div><h3 style="margin-top:5px">Gut microbiome and other stool markers</h3><p>Same constraint. These need a stool sample, so they are feasible only with an added capture path and significant R&amp;D, well beyond the MVP.</p></div>
+  </div>
+
+  <div class="divider"></div>
+  <h3 style="margin-bottom:10px">Ways it scales, once the MVP is proven</h3>
+  <div class="grid g2">
+    <div class="card"><div class="n">MORE TESTS, SAME DEVICE</div><p style="margin-top:6px">Added panels unlock by cartridge on the same base, no new device and no site visit.</p></div>
+    <div class="card"><div class="n">MORE PLACES</div><p style="margin-top:6px">The same commode serves a home or a hospital ward through a mode switch. Institutions first, then homes.</p></div>
+    <div class="card"><div class="n">LOWER COST AT VOLUME</div><p style="margin-top:6px">Cartridge and setup cost per unit fall with scale, so the economics improve as it grows.</p></div>
+    <div class="card"><div class="n">A CONSENTED DATASET</div><p style="margin-top:6px">Daily readings build a population-health signal over time, strictly consented and DPDP-compliant. A by-product of scale, never the core model.</p></div>
+  </div>
+  <div class="call gold"><span class="cl">The honest headline</span><p>For BPP, we prove one urine panel. Pregnancy and hormones are the credible next cartridges. Colon cancer is a stool test our current bowl cannot do without new hardware, and we say so plainly rather than overpromising. A roadmap that names its limits is stronger than one that claims everything.</p></div>
 </section>
 
 <!-- ===== TAB 13: VALIDATION ===== -->
@@ -627,9 +847,13 @@
     <thead><tr><th>Claim in this demo</th><th>Evidence level</th><th>The honest position</th></tr></thead>
     <tbody>
       <tr><td>Electrochemical urine sensing works</td><td><span class="eb proven">Proven</span></td><td>Mature, commercial technology.</td></tr>
-      <tr><td>Specific gravity corrects for dilution</td><td><span class="eb proven">Proven method</span></td><td>Standard lab practice; applying it in the bowl is the engineering to prove.</td></tr>
-      <tr><td>Ten-marker MVP panel</td><td><span class="eb validate">Mixed</span></td><td>Glucose, pH, specific gravity are strong electrochemical reads. Several markers start as reagent-pad reads. Full quantification is validation work.</td></tr>
-      <tr><td>Dilution-correction accuracy</td><td><span class="eb validate">Must validate</span></td><td>Must be checked against lab reference readings before any accuracy claim.</td></tr>
+      <tr><td>Passive urine separation by bowl geometry</td><td><span class="eb proven">Ships commercially</span></td><td>Laufen save!, developed with EOOS and Eawag, separates urine from flush water using the teapot effect with no moving parts, and reports it works for men, women and children. We would licence or design around it, not invent it.</td></tr>
+      <tr><td>Specific gravity as a validity gate</td><td><span class="eb proven">Proven rule</span></td><td>Laboratories already treat over-dilute samples as invalid. We enforce the same rule automatically and report nothing rather than a bad number.</td></tr>
+      <tr><td>Separation efficiency on our own bowl</td><td><span class="eb validate">Must validate</span></td><td>Published performance is Laufen's, not ours. Residual flush-water carry-over must be measured on our geometry, using infrared study of real voids plus a laboratory urination rig, the method EOOS used.</td></tr>
+      <tr><td>Seated use is required</td><td><span class="eb market">Known limitation</span></td><td>Diversion only works when urine reaches the pan, so standing voids are not captured. This is inherent to the method and is shared by Laufen. We handle it by capturing opportunistically rather than on a fixed schedule.</td></tr>
+      <tr><td>Creatinine and albumin-to-creatinine ratio</td><td><span class="eb validate">Deferred to Pro</span></td><td>Electrochemical creatinine needs a three-enzyme cascade with real shelf-life risk in Indian ambient conditions. Deliberately excluded from the launch panel rather than promised.</td></tr>
+      <tr><td>Ten-marker MVP panel</td><td><span class="eb validate">Mixed</span></td><td>Glucose, pH and specific gravity are strong electrochemical reads. Several markers start as reagent-pad reads. Full quantification is validation work.</td></tr>
+      <tr><td>Accuracy against lab references</td><td><span class="eb validate">Must validate</span></td><td>Device concentrations must agree with hospital lab results on split samples before any accuracy claim.</td></tr>
       <tr><td>Passive family identification</td><td><span class="eb validate">Must validate</span></td><td>Sound method, used elsewhere, but accuracy in a real household must be tested.</td></tr>
       <tr><td>Cleaning prevents carry-over</td><td><span class="eb validate">Must validate</span></td><td>Firm design; zero carry-over must be proven in testing.</td></tr>
       <tr><td>The 3D model and navigator</td><td><span class="eb market">Representation</span></td><td>A demo model of the design, not final styling or a scan of a built unit.</td></tr>
@@ -649,7 +873,7 @@
   All prices and accuracy figures are design targets pending quotes and clinical validation. Not a filed patent.<br>
   Stanford US 11,604,177 B1 and Withings US 2023/0062797 referenced only to define what we avoid. Competitor details from public information.</p>
 </footer>
-<script>/* Three.js r128 (MIT) bundled inline so this is a single file */
+<script>/* Three.js r128 (MIT) bundled inline */
 /**
  * @license
  * Copyright 2010-2021 Three.js Authors
@@ -701,16 +925,16 @@
        zone:{type:'text',html:'registered ✓ &nbsp; testing ON ✓ &nbsp; not tested today ✓'},
        note:'All three signals agree. '+p.name+' is cleared for today\u2019s test.',phone:{type:'hello',p:p},
        x:'The three signals agree, so the reading saves to '+p.name+'. '+p.name+' is opted in and has not been tested yet today, so the device goes ahead.'},
-      {ph:'Sample',t:'One sample, once for the day',clock:clock,st:['teal','Sampling…'],
-       zone:{type:'text',html:'sealed channel &nbsp;·&nbsp; not the open bowl'},note:'The sample enters a sealed channel, off the bowl surface.',phone:{type:'testing'},
-       x:'A small sample is drawn into a sealed channel. This runs once a day, not on every flush, which protects privacy and saves the cartridge.'},
+      {ph:'Separate',t:'The bowl separates the urine',clock:clock,st:['teal','Separating…'],
+       zone:{type:'text',html:'urine → hidden channel &nbsp;·&nbsp; flush water → main drain'},note:'Bowl geometry diverts urine passively. No moving parts, nothing to aim at.',phone:{type:'testing'},
+       x:'The bowl\u2019s curve guides slow-moving urine into a concealed channel, while fast flush water shoots past it to the drain. This happens by surface tension alone, with no pump, no sensor and nothing for Anil to do. About one millilitre is tapped from that clean flow into the cartridge, and the rest goes to drain.'},
       {ph:'Measure',t:'Reading '+ml,clock:clock,st:['teal','Measuring'],
-       zone:{type:'readout',rows:[['raw '+ml,raw,false]]},note:'The cartridge produces a raw electrochemical reading.',phone:{type:'testing'},
-       x:'The cartridge measures '+ml+'. The raw number is '+raw+'. But a toilet sample is diluted, so this is not the true value yet.'},
-      {ph:'Correct',t:'Correcting for dilution',clock:clock,st:['teal','Correcting'],
-       zone:{type:'readout',rows:[['raw',raw,false],['dilution',factor,false],['corrected',corrected,true]]},
-       note:'The dilution is measured and the reading corrected. Optical rivals cannot do this.',phone:{type:'testing'},
-       x:'The device measures how diluted the sample is ('+factor+') and corrects the reading. The corrected '+ml+' is '+corrected+'. This is the core of why the number can be trusted.'},
+       zone:{type:'readout',rows:[['measured '+ml,raw,false]]},note:'The cartridge produces a quantified electrochemical reading.',phone:{type:'testing'},
+       x:'The cartridge measures '+ml+' on the separated, undiluted sample. The measured value is '+raw+'. Next the device confirms the sample was concentrated enough to trust, the same validity check a hospital lab runs.'},
+      {ph:'Validate',t:'Checking the sample is valid',clock:clock,st:['teal','Validating'],
+       zone:{type:'readout',rows:[['specific gravity',factor,false],['validity','PASS · within 1.003–1.030',false],['reported '+ml,corrected,true]]},
+       note:'Specific gravity confirms the sample is concentrated enough to trust.',phone:{type:'testing'},
+       x:'Specific gravity reads '+factor+', inside the normal clinical range of 1.003 to 1.030, so the sample is valid. Notice the number does not change: no correction is applied, because the sample was never diluted in the first place. The reported '+ml+' is '+corrected+'. Had specific gravity fallen outside that range, the sample would have been rejected and no result issued at all.'},
       {ph:'Result',t:'Result on '+p.name+'\u2019s phone',clock:clock,st:[kind==='alert'?'rust':'green',kind==='alert'?'Flagged':'Result sent'],
        zone:{type:'text',html:corrected+' &nbsp;·&nbsp; '+statusText},
        note:kind==='alert'?'Reading crossed a threshold. The linked doctor is notified.':'Reading is in range. No alert needed.',
@@ -739,13 +963,13 @@
      x:p.name+' came back later. He was already tested at '+earlier+', so the device does not run again. His phone shows today\u2019s result is already recorded. One meaningful reading a day is the design.'}]};}
 
   var events=[
-    tested(people.anil,'06:40','Glucose','1.6 mmol/L','× 3.4','5.4 mmol/L','In range','ok'),
+    tested(people.anil,'06:40','Glucose','5.4 mmol/L','1.018','5.4 mmol/L','In range','ok'),
     optout(people.priya,'06:52'),
-    tested(people.sunita,'07:05','Protein','0.05 g/L','× 2.8','0.14 g/L','In range','ok'),
+    tested(people.sunita,'07:05','Protein','0.08 g/L','1.022','0.08 g/L','In range','ok'),
     guestEvt(people.guest,'07:20'),
-    tested(people.rohan,'07:35','pH','5.8','× 3.1','6.2','Normal','ok'),
+    tested(people.rohan,'07:35','pH','6.2','1.015','6.2','Normal','ok'),
     already(people.anil,'08:10','06:40'),
-    tested(people.dadi,'08:30','Glucose','2.7 mmol/L','× 3.4','9.1 mmol/L','Above range','alert')
+    tested(people.dadi,'08:30','Glucose','14.6 mmol/L','1.021','14.6 mmol/L','Above range','alert')
   ];
   var evPeople=[people.anil,people.priya,people.sunita,people.guest,people.rohan,people.anil,people.dadi];
   var flat=[]; events.forEach(function(ev,ei){ev.steps.forEach(function(s,si){flat.push({s:s,ei:ei,si:si,tot:ev.steps.length});});});
@@ -804,14 +1028,14 @@
   var components=[
     {id:'body',n:'Ceramic commode body',d:'The structural shell and bowl',eb:'proven',
      detail:'A standard sanitaryware commode, cast and glazed by an Indian maker such as Hindware, Cera or Jaquar. It houses every subsystem and installs like any premium WC.'},
-    {id:'zone',n:'Sealed sample zone',d:'Where the sample is captured, off the surface',eb:'validate',
-     detail:'A sealed channel inside the bowl takes the sample away from the open surface, so one person\u2019s sample does not spread. Proving zero carry-over here is part of validation.'},
+    {id:'zone',n:'Sample tap & sealed channel',d:'Takes ~1 mL from the diverted flow',eb:'validate',
+     detail:'A tap draws roughly one millilitre from the diverted urine channel into the cartridge, and the remainder passes on to drain. Because only a millilitre is needed, even a brief or partial void gives enough to test. The channel is purged with air after every sample and verified clean before the next person. Proving zero carry-over here is part of validation.'},
     {id:'sensor',n:'Sensor and cartridge module',d:'The diagnostic core',eb:'validate',
      detail:'Holds the electrochemical cartridge in contact with the sample. This is the layer that turns the toilet into a diagnostic instrument.'},
     {id:'cart',n:'Cartridge dock',d:'Reads the cartridge, unlocks the tier',eb:'proven',
      detail:'A physical and electronic key. The cartridge both supplies the chemistry and unlocks the tier, so one base becomes Lite, Pro or Max by cartridge alone. This is our strongest patent candidate.'},
-    {id:'dil',n:'Dilution sensor',d:'The core moat',eb:'validate',
-     detail:'Measures specific gravity at the moment of reading, so every result is corrected for how diluted the bowl sample is. No optical rival can do this.'},
+    {id:'dil',n:'Urine-diverting bowl geometry',d:'Separates urine from flush water, passively',eb:'proven',
+     detail:'A curve moulded into the bowl uses the teapot effect. Slow-moving urine clings to the ceramic and is guided into a concealed channel; fast-moving flush water overshoots and goes to the main drain. No valve, no sensor, no moving parts, and nothing for the user to aim at or press. Laufen save! ships this geometry today and reports it works for men, women and children. This is the foundation the whole diagnostic depends on, because it is what makes the sample undiluted.'},
     {id:'clean',n:'Cleaning system',d:'Rinse, flush, verify',eb:'proven',
      detail:'Water-jet rinse and channel flush after every use, then a verification check confirms the surface is clean before the next sample is accepted.'},
     {id:'pcb',n:'Controller and PCB',d:'Runs everything',eb:'proven',
@@ -866,7 +1090,7 @@
     meshes.zone=[ mk(new THREE.CylinderGeometry(0.72,0.72,0.08,40),new THREE.MeshStandardMaterial({color:0x2f5a4d,roughness:0.5}),-0.08,'zone') ];
     // sensor module
     meshes.sensor=[ mk(new THREE.CylinderGeometry(0.16,0.16,0.12,24),new THREE.MeshStandardMaterial({color:0x0b6e55,roughness:0.4}),0.03,'sensor') ];
-    // dilution sensor
+    // urine-diverting geometry & validity sensor
     meshes.dil=[ mk(new THREE.TorusGeometry(0.5,0.05,14,40),new THREE.MeshStandardMaterial({color:0x2b7fb0,roughness:0.4}),0.06,'dil') ];
     meshes.dil[0].rotation.x=Math.PI/2;
     // cartridge dock
