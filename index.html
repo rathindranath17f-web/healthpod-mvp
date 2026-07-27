@@ -86,16 +86,23 @@
   footer p{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.8;max-width:84ch;margin:0 auto}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
   /* 3D navigator */
-  .navwrap{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+  .navwrap{display:block}
   @media(max-width:860px){.navwrap{grid-template-columns:1fr}}
-  .stage3d{position:relative;background:linear-gradient(160deg,#0E1C18,#0B1310);border-radius:16px;overflow:hidden;border:1px solid #16302a;aspect-ratio:4/3;min-height:340px}
+  .stage3d{position:relative;background:linear-gradient(160deg,#0E1C18,#0B1310);border-radius:16px;overflow:hidden;border:1px solid #16302a;aspect-ratio:16/10;min-height:440px}
   #c3d{width:100%;height:100%;display:block;cursor:grab}#c3d:active{cursor:grabbing}
   .stage3d .hint{position:absolute;left:14px;bottom:12px;font-family:var(--mono);font-size:11px;color:#5b7d70;pointer-events:none}
   .stage3d .toolbar{position:absolute;top:12px;left:12px;display:flex;gap:7px}
   .t3d{font-family:var(--mono);font-size:11px;font-weight:600;color:#cfeee0;background:#12251f;border:1px solid #23443a;padding:6px 10px;border-radius:8px;cursor:pointer}
   .t3d:hover,.t3d.on{background:var(--teal);color:#031;border-color:var(--teal)}
   .load3d{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:#5b7d70;text-align:center;padding:20px}
-  .complist{display:flex;flex-direction:column;gap:8px;max-height:440px;overflow-y:auto}
+  .labels3d{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .lbl3d{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;color:#dff7ec;white-space:nowrap;pointer-events:auto;cursor:pointer;transition:opacity .2s}
+  .lbl3d .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(84,224,166,.22);flex:0 0 auto}
+  .lbl3d .txt{background:rgba(9,17,14,.85);border:1px solid #2c5648;border-radius:6px;padding:2px 8px}
+  .lbl3d.on .dot{background:#fff;box-shadow:0 0 0 4px rgba(84,224,166,.5)}
+  .lbl3d.on .txt{background:var(--teal);color:#04231a;border-color:var(--teal);font-weight:700}
+  .lbl3d.dim{opacity:.32}
+  .complist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:16px}
   .comp{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 13px;cursor:pointer;transition:.15s;text-align:left;width:100%}
   .comp:hover{border-color:var(--tealline)}
   .comp.on{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal);background:var(--tealtint)}
@@ -265,11 +272,12 @@
 <section class="tab" data-title="3D Navigator" id="t-3d">
   <div class="eyebrow">3D product navigator</div>
   <h2>Explore the product, part by part</h2>
-  <p class="sintro">Drag to rotate. Use Explode to separate the parts, and tap any component in the list to highlight it and read what it does and why it is there. Each part is tagged by how proven it is.</p>
+  <p class="sintro">Drag to rotate the commode. Every part is named right on the model, and the names follow it as you turn. Press Explode to pull the parts apart and see inside, including the hidden channel that carries the sample. Tap any label or list item to highlight that part and read what it does. Each part is tagged by how proven it is.</p>
   <div class="navwrap">
     <div class="stage3d">
       <div class="load3d" id="load3d">Loading 3D model. This needs a connection the first time.</div>
       <canvas id="c3d"></canvas>
+      <div class="labels3d" id="labels3d"></div>
       <div class="toolbar">
         <button class="t3d on" id="btnRot">◐ Rotate</button>
         <button class="t3d" id="btnExplode">▤ Explode</button>
@@ -284,7 +292,7 @@
   <div class="compdetail" id="compDetail">
     <div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">TAP A COMPONENT</div>
     <h3 style="margin-top:5px">The parts that make it a diagnostic device</h3>
-    <p class="body" style="margin-top:6px">A commode whose bowl separates urine from flush water by shape alone, plus four things: a sample tap and sealed channel, a sensor-and-cartridge module, a validity sensor, and a self-cleaning system, all run by a small controller. Tap any part above to see its role.</p>
+    <p class="body" style="margin-top:6px">This is the full commode, end to end: the ceramic body and bowl, the seat and lid, the water tank, the urine-diverting lip, the concealed sample channel, the sensor and cartridge module, the cleaning jets, and the controller with power in the base. Rotate it, explode it, and tap any label to see what each part does.</p>
   </div>
   <div class="call gold" style="margin-top:16px"><span class="cl">Honest note</span><p>This is a demo model of the layout, not the final industrial design or a scan of a built unit. It is here to make the parts and their jobs clear.</p></div>
 </section>
@@ -319,6 +327,23 @@
     <div class="card"><div class="n">LAYER 3 · READER</div><h3>Controller and self-clean <span class="eb proven">Standard parts</span></h3><p>Sealed electronics, a low-power microcontroller, Wi-Fi and BLE, and the cleaning system. No exotic parts, which is why India-first manufacture is realistic.</p></div>
     <div class="card"><div class="n">LAYER 4 · INTELLIGENCE</div><h3>App and cloud AI <span class="eb proven">Established</span></h3><p>Turns raw readings into a daily trend score with a physician dashboard. This is what users subscribe to. Raw output alone is not the product; the monitored trend is.</p></div>
   </div>
+
+  <div class="divider"></div>
+  <h2>How the separation happens, at design level</h2>
+  <p class="sintro">Layer 0 in one line is: shape and speed do the sorting. Here is the same thing at the level of the actual parts, so it is clear there is nothing hidden or magical in it. Every element below is ceramic geometry or a simple tap, not a machine.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Design element</th><th>What it does</th><th>Why it works</th></tr></thead>
+    <tbody>
+      <tr><td>Front inner bowl wall</td><td>The surface urine lands on and runs down slowly</td><td>A gentle slope keeps the flow slow, which is what lets it cling</td></tr>
+      <tr><td>Moulded diverting lip</td><td>A small ridge where the wall meets a concealed channel</td><td>Slow urine curls over the lip (teapot effect); fast water overshoots it</td></tr>
+      <tr><td>Concealed channel</td><td>Carries the diverted urine to the sampling point, sealed off from the pan</td><td>Keeps the clean sample away from waste and standing water</td></tr>
+      <tr><td>Sample tap</td><td>Draws about one millilitre into the cartridge; the rest flows on</td><td>Only a tiny, clean volume is needed, so even a short void is enough</td></tr>
+      <tr><td>Main pan and drain</td><td>Takes fast flush water and solid waste to the sewer</td><td>Flush momentum carries it straight past the lip, so the channel stays clean</td></tr>
+    </tbody>
+  </table></div>
+  <div class="call teal"><span class="cl">The design principle in one sentence</span><p>The separation is passive: it uses the difference in speed between a slow void and a fast flush, guided by a moulded lip and channel, with no valve, no pump for the separation, no sensor and no power. That is why it is reliable and cheap to make, and why an Indian sanitaryware maker can produce the bowl under licence.</p></div>
+  <div class="call rust"><span class="cl">Design limit, stated plainly</span><p>Because the urine must reach the front wall to be diverted, the method is designed for seated use. Standing use is not reliably captured. This is inherent to the geometry and is the same limit the shipping Laufen save! toilet has. The MVP records the first valid seated sample per person per day rather than trying to catch every use.</p></div>
+
   <div class="divider"></div>
   <h2>Feasibility check, done honestly</h2>
   <div class="grid g2">
@@ -509,6 +534,23 @@
   })();
   </script>
 
+  <div class="segx">
+    <div class="eyebrow" style="margin-top:6px">How the segregation actually works</div>
+    <h3 style="margin:4px 0 8px">Shape and speed do the sorting, not a machine</h3>
+    <p class="sintro">The animation above is not a special effect. It shows a real, shipping method. The separation is done entirely by the shape of the bowl and the speed of the liquid, with no valve, no sensor, no moving part and no power. Here is exactly what happens, in plain steps.</p>
+    <div class="call navy"><span class="cl">The one idea behind it: the teapot effect</span><p>Pour tea slowly and it dribbles down the spout; pour it fast and it arcs cleanly into the cup. Slow liquid clings to a surface and follows a curve, fast liquid has too much momentum and flies straight past. Urine and flush water move at very different speeds, and the bowl is shaped to use that difference.</p></div>
+    <div class="grid g3" style="margin:6px 0 6px">
+      <div class="card"><div class="n">STEP 1 · SLOW URINE</div><p style="margin-top:6px">The person sits and urinates. Urine runs slowly down the front inner wall of the bowl.</p></div>
+      <div class="card"><div class="n">STEP 2 · THE LIP</div><p style="margin-top:6px">At a set point the bowl has a small moulded lip with a hidden channel behind it.</p></div>
+      <div class="card" style="border-color:var(--tealline);background:var(--tealtint)"><div class="n" style="color:var(--teal)">STEP 3 · IT CLINGS AND TURNS</div><p style="margin-top:6px">Because it is slow, the urine clings to the ceramic and curls over the lip into the hidden channel. This is the teapot effect doing the sorting.</p></div>
+      <div class="card"><div class="n">STEP 4 · ONE MILLILITRE TAPPED</div><p style="margin-top:6px">The channel carries the clean urine to the sampling point. About one millilitre is drawn into the cartridge, and the rest passes on.</p></div>
+      <div class="card"><div class="n">STEP 5 · FAST FLUSH BYPASSES</div><p style="margin-top:6px">On flush, water arrives fast and hard. It cannot follow the small lip, so it shoots straight past the channel into the pan and down the drain, clearing waste like a normal toilet.</p></div>
+      <div class="card" style="border-color:#E7D6A6"><div class="n" style="color:var(--gold)">WHERE ELECTRONICS BEGIN</div><p style="margin-top:6px">Only after separation. The clean urine reaches the cartridge, the device checks specific gravity to confirm the sample is valid, then measures the markers. The smart part never touches the messy part.</p></div>
+    </div>
+    <div class="call teal"><span class="cl">Why it can be trusted</span><p>This is not our untested theory. The Laufen save! toilet, designed with the studio EOOS and the Swiss water institute Eawag, already ships this exact urine-diverting bowl and reports that it works for men, women and children. We add the diagnostic layer on top of a separation method that is already proven and on the market.</p></div>
+    <div class="call rust"><span class="cl">The honest limits</span><p>Separation works for seated use, because the urine has to reach the front of the bowl, so standing use is not reliably captured. This is a known limit we share with Laufen. Solid waste and the main flush go to the pan and drain, never the urine channel, and the sampling channel is rinsed and checked clean between users, so nothing carries over.</p></div>
+  </div>
+
   <div class="sim">
     <div class="rail" id="rail" role="tablist" aria-label="Morning events"></div>
     <div class="stage">
@@ -516,11 +558,14 @@
         <div class="dev-top"><span>Health Pod · in the bathroom</span><span id="devClock">06:40</span></div>
         <div class="statuspill" id="statusPill"><span class="sd"></span><span id="statusText">Ready</span></div>
         <div class="devbody">
-          <svg class="toilet" viewBox="0 0 120 120" aria-hidden="true">
-            <rect x="34" y="10" width="52" height="26" rx="4" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
-            <ellipse cx="60" cy="66" rx="34" ry="22" fill="none" stroke="#2c5648" stroke-width="3"/>
-            <ellipse cx="60" cy="66" rx="22" ry="13" fill="#0a120f" stroke="#1c352d" stroke-width="2"/>
-            <path d="M40 86 L80 86 L74 108 L46 108 Z" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+          <svg class="toilet" viewBox="0 0 140 120" aria-hidden="true">
+            <rect x="10" y="22" width="30" height="44" rx="5" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+            <rect x="8" y="15" width="34" height="9" rx="3" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+            <rect x="36" y="46" width="20" height="12" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+            <path d="M52 54 C 50 80, 68 94, 84 94 C 100 94, 114 80, 112 54 Z" fill="#0d1a16" stroke="#2c5648" stroke-width="2"/>
+            <ellipse cx="82" cy="52" rx="34" ry="11" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
+            <ellipse cx="82" cy="52" rx="23" ry="6" fill="#0a120f" stroke="#1c352d" stroke-width="1.5"/>
+            <path d="M72 92 L96 92 L102 114 L66 114 Z" fill="#16302a" stroke="#2c5648" stroke-width="2"/>
           </svg>
         </div>
         <div class="devzone" id="devZone"></div>
@@ -539,8 +584,9 @@
         <span class="phase" id="phaseTag">Approach</span>
         <span class="stepcount" id="stepCount">Event 1 of 7 · step 1 of 8</span>
       </div>
-      <h3 id="narrTitle">Anil walks in</h3>
+      <h3 id="narrTitle">Deepak walks in</h3>
       <p id="narrText">Text</p>
+      <div id="nextHint" style="font-family:var(--mono);font-size:11px;color:#7fae9d;margin:2px 0 10px;padding-top:8px;border-top:1px dashed var(--line)"></div>
       <div class="controls">
         <button class="btn" id="backBtn">◀ Back</button>
         <button class="btn primary" id="nextBtn">Next ▶</button>
@@ -550,7 +596,7 @@
     </div>
   </div>
   <div class="grid g2" style="margin-top:22px">
-    <div class="card"><div class="n">CASE · OPTED OUT</div><h3 style="margin-top:5px">Recognised, left alone</h3><p>Priya turned testing off. The device recognises her and does nothing. No sample, no reading. One tap turns it back on. This is the restriction, made concrete.</p></div>
+    <div class="card"><div class="n">CASE · OPTED OUT</div><h3 style="margin-top:5px">Recognised, left alone</h3><p>Utkarsh turned testing off. The device recognises him and does nothing. No sample, no reading. One tap turns it back on. This is the restriction, made concrete.</p></div>
     <div class="card"><div class="n">CASE · GUEST</div><h3 style="margin-top:5px">Never tested</h3><p>A visitor matches no profile, so the device treats them as a guest and never tests them. Testing stays limited to people who registered and opted in.</p></div>
   </div>
 </section>
@@ -907,9 +953,9 @@
 (function(){
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var people={
-    anil:{name:'Anil',color:'#1F3864'},priya:{name:'Priya',color:'#6D3B8E'},
-    sunita:{name:'Sunita',color:'#0B6E55'},guest:{name:'Guest',color:'#8898A4'},
-    rohan:{name:'Rohan',color:'#8A6400'},dadi:{name:'Dadi',color:'#8A2A24'}
+    anil:{name:'Deepak',color:'#1F3864'},priya:{name:'Utkarsh',color:'#6D3B8E'},
+    sunita:{name:'Somnath',color:'#0B6E55'},guest:{name:'Guest',color:'#8898A4'},
+    rohan:{name:'Raghuraj',color:'#8A6400'},dadi:{name:'Surajit',color:'#8A2A24'}
   };
   function approach(p,clock){return {ph:'Approach',t:p.name+' sits down',clock:clock,st:['amber','Someone is here'],
     zone:{type:'text',html:'weight detected &nbsp;·&nbsp; a phone is nearby'},note:'The device wakes. Nothing is measured yet.',phone:{type:'idle'},
@@ -919,6 +965,8 @@
     x:'The device compares three signals: the phone nearby over Bluetooth, a learned weight-and-time pattern, and a chemical fingerprint from the first drops. It never relies on just one.'};}
   function tested(p,clock,marker,raw,factor,corrected,statusText,kind){
     var ml=marker.toLowerCase();
+    var MEANING={glucose:'screens for diabetes and blood-sugar control',protein:'is an early sign of kidney stress',albumin:'is an early sign of kidney stress',ph:'flags urinary-tract and kidney-stone risk'};
+    var meaning=MEANING[ml]||'is part of the standard ten-marker urine panel';
     return {outcome:kind==='alert'?'alert':'tested',clock:clock,steps:[
       approach(p,clock), identify(p,clock),
       {ph:'Decision',t:'Identified: '+p.name,clock:clock,st:['navy',p.name],
@@ -927,10 +975,10 @@
        x:'The three signals agree, so the reading saves to '+p.name+'. '+p.name+' is opted in and has not been tested yet today, so the device goes ahead.'},
       {ph:'Separate',t:'The bowl separates the urine',clock:clock,st:['teal','Separating…'],
        zone:{type:'text',html:'urine → hidden channel &nbsp;·&nbsp; flush water → main drain'},note:'Bowl geometry diverts urine passively. No moving parts, nothing to aim at.',phone:{type:'testing'},
-       x:'The bowl\u2019s curve guides slow-moving urine into a concealed channel, while fast flush water shoots past it to the drain. This happens by surface tension alone, with no pump, no sensor and nothing for Anil to do. About one millilitre is tapped from that clean flow into the cartridge, and the rest goes to drain.'},
+       x:'The bowl\u2019s curve guides slow-moving urine into a concealed channel, while fast flush water shoots past it to the drain. This happens by surface tension alone, with no pump, no sensor and nothing for '+p.name+' to do. About one millilitre is tapped from that clean flow into the cartridge, and the rest goes to drain.'},
       {ph:'Measure',t:'Reading '+ml,clock:clock,st:['teal','Measuring'],
        zone:{type:'readout',rows:[['measured '+ml,raw,false]]},note:'The cartridge produces a quantified electrochemical reading.',phone:{type:'testing'},
-       x:'The cartridge measures '+ml+' on the separated, undiluted sample. The measured value is '+raw+'. Next the device confirms the sample was concentrated enough to trust, the same validity check a hospital lab runs.'},
+       x:'The cartridge measures '+ml+' on the clean, undiluted sample. This marker '+meaning+'. The measured value is '+raw+'. The device then confirms the sample was concentrated enough to trust, the same validity check a hospital lab runs.'},
       {ph:'Validate',t:'Checking the sample is valid',clock:clock,st:['teal','Validating'],
        zone:{type:'readout',rows:[['specific gravity',factor,false],['validity','PASS · within 1.003–1.030',false],['reported '+ml,corrected,true]]},
        note:'Specific gravity confirms the sample is concentrated enough to trust.',phone:{type:'testing'},
@@ -949,7 +997,7 @@
   function optout(p,clock){return {outcome:'optout',clock:clock,steps:[approach(p,clock),identify(p,clock),
     {ph:'Restricted',t:p.name+' has testing turned off',clock:clock,st:['rust','Not tested'],
      zone:{type:'text',html:'recognised ✓ &nbsp; testing OFF ✕'},note:'Recognised as '+p.name+', who has opted out. No sample is taken.',phone:{type:'optout',p:p},
-     x:p.name+' chose not to be tested and switched it off in the app. The device recognises her and does nothing at all. No sample, no reading. She uses the toilet normally and it returns to ready. Turning testing back on is one tap, any time.'}]};}
+     x:p.name+' chose not to be tested and switched it off in the app. The device recognises '+p.name+' and does nothing at all. No sample, no reading. The toilet is used normally and returns to ready. Turning testing back on is one tap, any time.'}]};}
   function guestEvt(p,clock){return {outcome:'guest',clock:clock,steps:[approach(p,clock),
     {ph:'Identify',t:'This is not a registered person',clock:clock,st:['grey','Unrecognised'],
      zone:{type:'text',html:'no matching profile found'},note:'The three signals do not match anyone in the household.',phone:{type:'guest'},
@@ -980,7 +1028,7 @@
   var rail=document.getElementById('rail'),pill=document.getElementById('statusPill'),stTxt=document.getElementById('statusText'),
     devZone=document.getElementById('devZone'),devNote=document.getElementById('devNote'),pbody=document.getElementById('pbody'),
     devClock=document.getElementById('devClock'),phaseTag=document.getElementById('phaseTag'),stepCount=document.getElementById('stepCount'),
-    narrTitle=document.getElementById('narrTitle'),narrText=document.getElementById('narrText'),backBtn=document.getElementById('backBtn'),
+    narrTitle=document.getElementById('narrTitle'),narrText=document.getElementById('narrText'),nextHint=document.getElementById('nextHint'),backBtn=document.getElementById('backBtn'),
     nextBtn=document.getElementById('nextBtn'),playBtn=document.getElementById('playBtn'),progFill=document.getElementById('progFill');
   var outIcon={tested:['✓','#0B6E55'],alert:['!','#8A2A24'],optout:['✕','#8A2A24'],guest:['?','#8898A4'],already:['↺','#1F3864']};
   events.forEach(function(ev,ei){var p=evPeople[ei];var b=document.createElement('button');b.className='revent';b.type='button';var oi=outIcon[ev.outcome];
@@ -1011,6 +1059,7 @@
     devZone.innerHTML=renderZone(s.zone);devNote.textContent=s.note;devClock.textContent=s.clock;pbody.innerHTML=renderPhone(s.phone);
     phaseTag.textContent=s.ph;stepCount.textContent='Event '+(f.ei+1)+' of '+events.length+' · step '+(f.si+1)+' of '+f.tot;
     narrTitle.textContent=s.t;narrText.textContent=s.x;progFill.style.width=((idx+1)/flat.length*100)+'%';
+    if(idx<flat.length-1){var ns=flat[idx+1].s;nextHint.textContent='Next → '+ns.ph+': '+ns.t;}else{nextHint.textContent='End of the morning walkthrough. Press Restart or pick an event on the left.';}
     backBtn.disabled=(idx===0);nextBtn.disabled=(idx===flat.length-1);
     for(var i=0;i<railBtns.length;i++)railBtns[i].classList.toggle('on',i===f.ei);}
   function go(i){idx=Math.max(0,Math.min(flat.length-1,i));render();}
@@ -1025,116 +1074,167 @@
 <script>
 /* ================= 3D NAVIGATOR ================= */
 (function(){
-  var components=[
-    {id:'body',n:'Ceramic commode body',d:'The structural shell and bowl',eb:'proven',
-     detail:'A standard sanitaryware commode, cast and glazed by an Indian maker such as Hindware, Cera or Jaquar. It houses every subsystem and installs like any premium WC.'},
-    {id:'zone',n:'Sample tap & sealed channel',d:'Takes ~1 mL from the diverted flow',eb:'validate',
-     detail:'A tap draws roughly one millilitre from the diverted urine channel into the cartridge, and the remainder passes on to drain. Because only a millilitre is needed, even a brief or partial void gives enough to test. The channel is purged with air after every sample and verified clean before the next person. Proving zero carry-over here is part of validation.'},
-    {id:'sensor',n:'Sensor and cartridge module',d:'The diagnostic core',eb:'validate',
-     detail:'Holds the electrochemical cartridge in contact with the sample. This is the layer that turns the toilet into a diagnostic instrument.'},
-    {id:'cart',n:'Cartridge dock',d:'Reads the cartridge, unlocks the tier',eb:'proven',
-     detail:'A physical and electronic key. The cartridge both supplies the chemistry and unlocks the tier, so one base becomes Lite, Pro or Max by cartridge alone. This is our strongest patent candidate.'},
-    {id:'dil',n:'Urine-diverting bowl geometry',d:'Separates urine from flush water, passively',eb:'proven',
-     detail:'A curve moulded into the bowl uses the teapot effect. Slow-moving urine clings to the ceramic and is guided into a concealed channel; fast-moving flush water overshoots and goes to the main drain. No valve, no sensor, no moving parts, and nothing for the user to aim at or press. Laufen save! ships this geometry today and reports it works for men, women and children. This is the foundation the whole diagnostic depends on, because it is what makes the sample undiluted.'},
-    {id:'clean',n:'Cleaning system',d:'Rinse, flush, verify',eb:'proven',
-     detail:'Water-jet rinse and channel flush after every use, then a verification check confirms the surface is clean before the next sample is accepted.'},
-    {id:'pcb',n:'Controller and PCB',d:'Runs everything',eb:'proven',
-     detail:'A low-power microcontroller runs the cycle logic, drives cleaning, and does first-pass edge scoring on the device. No exotic parts.'},
-    {id:'conn',n:'Connectivity and power',d:'App link and mains power',eb:'proven',
-     detail:'Wi-Fi and BLE for app sync and phone-proximity identification, plus a mains supply with surge protection, sealed to IP67.'}
+  var V3=null; // set after THREE loads
+  var comps=[
+    {id:'body',n:'Ceramic body & bowl',d:'The commode shell and bowl',eb:'proven',
+     detail:'A premium sanitaryware commode, cast and glazed by an Indian maker such as Hindware, Cera or Jaquar. It is the structural shell, the bowl, and the pedestal that houses every subsystem. It installs like any premium WC.'},
+    {id:'seatlid',n:'Seat and lid',d:'What the user sits on',eb:'proven',
+     detail:'A standard soft-close seat and lid. The seat also carries the weight-and-presence sensing used, with the phone signal, to tell household members apart.'},
+    {id:'tank',n:'Water tank',d:'Flush water supply',eb:'proven',
+     detail:'The cistern that flushes the pan. The fast flush is exactly what the diverting geometry uses: fast water overshoots the sample lip and clears waste to the drain.'},
+    {id:'lip',n:'Urine-diverting lip',d:'Separates urine from flush water',eb:'proven',
+     detail:'A curve moulded into the front inner bowl. Slow urine clings to the ceramic and curls over this lip into the hidden channel; fast flush water shoots straight past it to the drain. This is the teapot effect. No valve, no sensor, no moving parts. Laufen save! ships this geometry today for men, women and children. It is the foundation the whole diagnostic depends on.'},
+    {id:'channel',n:'Concealed sample channel',d:'Carries clean urine to the cartridge',eb:'validate',
+     detail:'A sealed channel behind the lip routes the diverted urine down to the sampling point, away from the pan and standing water. A tap draws about one millilitre into the cartridge; the rest passes on. The channel is air-purged and verified clean between users.'},
+    {id:'module',n:'Sensor & cartridge module',d:'The diagnostic core',eb:'validate',
+     detail:'Holds the replaceable electrochemical cartridge in contact with the sample and reads it. This is the layer that turns the toilet into a diagnostic instrument, and the cartridge is both the chemistry and the key that sets which panel runs.'},
+    {id:'clean',n:'Cleaning jets',d:'Rinse and self-clean',eb:'proven',
+     detail:'Water-jet rinse under the rim and a channel flush after every use, then a verification check confirms the surface is clean before the next sample is accepted.'},
+    {id:'control',n:'Controller, connectivity & power',d:'Runs everything, in the base',eb:'proven',
+     detail:'A low-power microcontroller runs the cycle logic, cleaning and first-pass scoring, with Wi-Fi and BLE for the app and a mains supply sealed to IP67. All standard parts, which is why India-first manufacture is realistic.'}
   ];
-  var listEl=document.getElementById('complist'), detailEl=document.getElementById('compDetail');
-  var ebLabel={proven:['Proven','proven'],validate:['Validate','validate']};
-  components.forEach(function(c,i){
-    var b=document.createElement('button'); b.className='comp'; b.type='button';
-    b.innerHTML='<span class="idx">'+(i+1)+'</span><span><span class="cn">'+c.n+' <span class="eb '+c.eb+'">'+ebLabel[c.eb][0]+'</span></span><span class="cd">'+c.d+'</span></span>';
-    b.addEventListener('click',function(){ selectComp(i); });
-    listEl.appendChild(b);
+  var listEl=document.getElementById('complist'), detailEl=document.getElementById('compDetail'), labelsEl=document.getElementById('labels3d');
+  var ebLabel={proven:'Proven',validate:'Validate'};
+  var current=null;
+
+  comps.forEach(function(c,i){
+    var btn=document.createElement('button'); btn.className='comp'; btn.type='button';
+    btn.innerHTML='<span class="idx">'+(i+1)+'</span><span><span class="cn">'+c.n+' <span class="eb '+c.eb+'">'+ebLabel[c.eb]+'</span></span><span class="cd">'+c.d+'</span></span>';
+    btn.addEventListener('click',function(){ selectComp(c.id); });
+    listEl.appendChild(btn);
+    var lab=document.createElement('div'); lab.className='lbl3d'; lab.setAttribute('data-id',c.id);
+    lab.innerHTML='<span class="dot"></span><span class="txt">'+c.n+'</span>';
+    lab.addEventListener('click',function(){ selectComp(c.id); });
+    labelsEl.appendChild(lab);
   });
-  function selectComp(i){
-    var c=components[i];
+  function selectComp(id){
+    current=id;
+    var i=comps.findIndex(function(c){return c.id===id;}); var c=comps[i];
     Array.prototype.forEach.call(listEl.children,function(x,j){x.classList.toggle('on',j===i);});
-    detailEl.innerHTML='<div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">COMPONENT '+(i+1)+' · '+ebLabel[c.eb][0].toUpperCase()+'</div><h3 style="margin-top:5px">'+c.n+'</h3><p class="body" style="margin-top:6px">'+c.detail+'</p>';
-    if(window.__highlight3D) window.__highlight3D(c.id);
+    Array.prototype.forEach.call(labelsEl.children,function(x){var on=x.getAttribute('data-id')===id;x.classList.toggle('on',on);x.classList.toggle('dim',!on);});
+    detailEl.innerHTML='<div class="n" style="font-family:var(--mono);font-size:11px;color:var(--teal);font-weight:600">PART '+(i+1)+' · '+ebLabel[c.eb].toUpperCase()+'</div><h3 style="margin-top:5px">'+c.n+'</h3><p class="body" style="margin-top:6px">'+c.detail+'</p>';
+    if(window.__hi3D)window.__hi3D(id);
   }
 
-  var renderer,scene,cam,pivot,meshes={},reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var autoRotate=true,exploded=false,rotY=0.5,rotX=0.16,dist=6,dragging=false,px=0,py=0,glow=0;
+  var renderer,scene,cam,pivot,reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var parts={}, autoRotate=true, exploded=false, expAmt=0, rotY=0.6, rotX=0.12, dist=7.2, targetDist=7.2, focused=false, camTarget=null, dragging=false, px=0, py=0, glow=0, started=false;
 
   window.__init3D=function(){
-    var canvas=document.getElementById('c3d'),load=document.getElementById('load3d');
+    if(started)return; var canvas=document.getElementById('c3d'), load=document.getElementById('load3d');
     if(!window.THREE){load.textContent='3D needs a connection to load. Every other tab works offline.';return;}
+    started=true; V3=THREE.Vector3; camTarget=new V3(0,0.95,0);
     var W=canvas.clientWidth||480,H=canvas.clientHeight||360;
     try{renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});}
     catch(e){load.textContent='This browser could not start 3D. The rest of the demo is unaffected.';return;}
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); renderer.setSize(W,H,false);
-    scene=new THREE.Scene(); cam=new THREE.PerspectiveCamera(40,W/H,0.1,100);
-    scene.add(new THREE.AmbientLight(0xffffff,0.6));
-    var k=new THREE.DirectionalLight(0xffffff,0.9);k.position.set(4,6,4);scene.add(k);
-    var f=new THREE.DirectionalLight(0x9fd6c4,0.4);f.position.set(-4,2,-3);scene.add(f);
+    scene=new THREE.Scene(); cam=new THREE.PerspectiveCamera(38,W/H,0.1,100);
+    scene.add(new THREE.AmbientLight(0xffffff,0.7));
+    var k=new THREE.DirectionalLight(0xffffff,0.85); k.position.set(4,7,5); scene.add(k);
+    var f=new THREE.DirectionalLight(0x9fd6c4,0.35); f.position.set(-4,2,-4); scene.add(f);
     pivot=new THREE.Group(); scene.add(pivot);
-    var ceramic=new THREE.MeshStandardMaterial({color:0xf4f7f6,roughness:0.35,metalness:0.02});
-    function mk(geo,mat,y,name){var m=new THREE.Mesh(geo,mat.clone());m.position.y=y;m.userData.baseY=y;m.userData.name=name;pivot.add(m);return m;}
-    // body group
-    meshes.body=[
-      mk(new THREE.CylinderGeometry(0.7,0.95,1.5,40),ceramic,-0.75,'body'),
-      mk(new THREE.CylinderGeometry(0.95,0.72,0.9,40,1,true),ceramic,0.35,'body'),
-      mk(new THREE.TorusGeometry(0.95,0.11,16,44),ceramic,0.8,'body'),
-      mk(new THREE.TorusGeometry(0.92,0.09,16,44),ceramic,0.93,'body')
-    ];
-    meshes.body[2].rotation.x=Math.PI/2; meshes.body[3].rotation.x=Math.PI/2;
-    // tank + power (conn)
-    meshes.conn=[ mk(new THREE.BoxGeometry(1.7,1.0,0.5),ceramic,0.95,'conn'), mk(new THREE.BoxGeometry(1.8,0.14,0.62),ceramic,1.5,'conn') ];
-    meshes.conn[0].position.z=-1.05; meshes.conn[1].position.z=-1.05;
-    // sample zone
-    meshes.zone=[ mk(new THREE.CylinderGeometry(0.72,0.72,0.08,40),new THREE.MeshStandardMaterial({color:0x2f5a4d,roughness:0.5}),-0.08,'zone') ];
-    // sensor module
-    meshes.sensor=[ mk(new THREE.CylinderGeometry(0.16,0.16,0.12,24),new THREE.MeshStandardMaterial({color:0x0b6e55,roughness:0.4}),0.03,'sensor') ];
-    // urine-diverting geometry & validity sensor
-    meshes.dil=[ mk(new THREE.TorusGeometry(0.5,0.05,14,40),new THREE.MeshStandardMaterial({color:0x2b7fb0,roughness:0.4}),0.06,'dil') ];
-    meshes.dil[0].rotation.x=Math.PI/2;
-    // cartridge dock
-    meshes.cart=[ mk(new THREE.BoxGeometry(0.42,0.2,0.28),new THREE.MeshStandardMaterial({color:0x1f3864,roughness:0.5}),0.82,'cart') ];
-    meshes.cart[0].position.z=0.92;
-    // cleaning ring
-    meshes.clean=[ mk(new THREE.TorusGeometry(0.78,0.04,12,40),new THREE.MeshStandardMaterial({color:0x3f9ad6,roughness:0.4}),0.6,'clean') ];
-    meshes.clean[0].rotation.x=Math.PI/2;
-    // pcb internal
-    meshes.pcb=[ mk(new THREE.BoxGeometry(0.5,0.12,0.4),new THREE.MeshStandardMaterial({color:0x14401f,roughness:0.6}),-0.4,'pcb') ];
 
-    pivot.position.y=0.1; load.style.display='none';
-    // explode offsets
-    var explodeY={body:0,conn:0.9,zone:-0.4,sensor:1.5,dil:1.9,cart:2.4,clean:1.1,pcb:-1.3};
-    window.__explodeMap=explodeY;
-    // interaction
+    var CERAMIC=new THREE.MeshStandardMaterial({color:0xf3f6f5,roughness:0.35,metalness:0.02});
+    var LIDMAT =new THREE.MeshStandardMaterial({color:0xe7edeb,roughness:0.4});
+    var TEAL   =new THREE.MeshStandardMaterial({color:0x2f9e77,roughness:0.4,emissive:0x000000});
+    var BLUE   =new THREE.MeshStandardMaterial({color:0x3f9ad6,roughness:0.4,emissive:0x000000});
+    var NAVY   =new THREE.MeshStandardMaterial({color:0x24406e,roughness:0.5,emissive:0x000000});
+    var SLOT   =new THREE.MeshStandardMaterial({color:0x2b7fb0,roughness:0.45,emissive:0x000000});
+    var CYAN   =new THREE.MeshStandardMaterial({color:0x62c7e0,roughness:0.4,emissive:0x000000});
+    var DARK   =new THREE.MeshStandardMaterial({color:0x24403a,roughness:0.6,emissive:0x000000});
+
+    function part(id,anchor,dir){ parts[id]={meshes:[],anchor:anchor,dir:dir}; return parts[id]; }
+    function add(id,geo,mat,pos,rot){ var m=new THREE.Mesh(geo,mat.clone()); m.position.copy(pos); if(rot)m.rotation.set(rot.x||0,rot.y||0,rot.z||0); m.userData.base=pos.clone(); parts[id].meshes.push(m); pivot.add(m); return m; }
+
+    // ---- BODY: pedestal + bowl via lathe ----
+    part('body', new V3(1.15,1.15,0), new V3(0,0,0));
+    var prof=[[0.55,0.00],[0.60,0.10],[0.50,0.45],[0.60,0.85],[0.85,1.15],[1.00,1.42],[1.00,1.50],[0.90,1.50],[0.86,1.40],[0.70,1.18],[0.45,0.95],[0.28,0.80],[0.16,0.70],[0.09,0.62],[0.00,0.60]];
+    var pts=prof.map(function(p){return new THREE.Vector2(p[0],p[1]);});
+    add('body', new THREE.LatheGeometry(pts,48), CERAMIC, new V3(0,0,0));
+    add('body', new THREE.CylinderGeometry(0.58,0.62,0.10,40), CERAMIC, new V3(0,0.02,0)); // foot
+
+    // ---- SEAT + LID ----
+    part('seatlid', new V3(0,1.62,0.35), new V3(0,1.35,0));
+    add('seatlid', new THREE.TorusGeometry(0.84,0.10,16,44), CERAMIC, new V3(0,1.54,0.05), {x:Math.PI/2});
+    add('seatlid', new THREE.CylinderGeometry(0.92,0.92,0.06,44), LIDMAT, new V3(0,1.74,-0.58), {x:-1.15});
+
+    // ---- TANK ----
+    part('tank', new V3(0,1.78,-0.98), new V3(0,0.15,-1.5));
+    add('tank', new THREE.BoxGeometry(1.30,0.85,0.34), CERAMIC, new V3(0,1.66,-0.95));
+    add('tank', new THREE.BoxGeometry(1.40,0.10,0.44), CERAMIC, new V3(0,2.11,-0.95));
+
+    // ---- DIVERTING LIP ----
+    part('lip', new V3(0,1.18,0.66), new V3(0,0.25,1.6));
+    var lip=add('lip', new THREE.TorusGeometry(0.42,0.045,12,28,Math.PI), TEAL, new V3(0,1.16,0.30), {x:Math.PI/2,z:0});
+    lip.rotation.x=Math.PI/2;
+
+    // ---- CONCEALED CHANNEL (tube) ----
+    part('channel', new V3(0.40,0.80,0.55), new V3(1.5,0,0.7));
+    var cpts=[new V3(0,1.12,0.42),new V3(0.10,0.98,0.40),new V3(0.26,0.80,0.40),new V3(0.44,0.64,0.40),new V3(0.56,0.56,0.40)];
+    add('channel', new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cpts),40,0.05,10,false), BLUE, new V3(0,0,0));
+
+    // ---- SENSOR + CARTRIDGE MODULE ----
+    part('module', new V3(0.72,0.60,0.42), new V3(1.9,0,0.5));
+    add('module', new THREE.BoxGeometry(0.34,0.44,0.32), NAVY, new V3(0.60,0.55,0.40));
+    add('module', new THREE.BoxGeometry(0.26,0.10,0.36), SLOT, new V3(0.60,0.66,0.40)); // cartridge slot
+
+    // ---- CLEANING JETS ----
+    part('clean', new V3(0.86,1.34,0.10), new V3(0.9,0.9,0));
+    add('clean', new THREE.TorusGeometry(0.78,0.028,10,40), CYAN, new V3(0,1.33,0.02), {x:Math.PI/2});
+
+    // ---- CONTROLLER + POWER (base) ----
+    part('control', new V3(0,0.22,0.0), new V3(0,-1.6,0));
+    add('control', new THREE.BoxGeometry(0.52,0.34,0.52), DARK, new V3(0,0.24,0));
+    add('control', new THREE.BoxGeometry(0.18,0.12,0.18), SLOT, new V3(0.22,0.34,0.16));
+
+    load.style.display='none';
+
+    // ---- controls ----
     var btnRot=document.getElementById('btnRot'),btnEx=document.getElementById('btnExplode'),btnReset=document.getElementById('btnReset');
     btnRot.addEventListener('click',function(){autoRotate=!autoRotate;btnRot.classList.toggle('on',autoRotate);});
     btnEx.addEventListener('click',function(){exploded=!exploded;btnEx.classList.toggle('on',exploded);});
-    btnReset.addEventListener('click',function(){rotY=0.5;rotX=0.16;dist=6;exploded=false;btnEx.classList.remove('on');clearHi();Array.prototype.forEach.call(listEl.children,function(x){x.classList.remove('on');});});
+    btnReset.addEventListener('click',function(){rotY=0.6;rotX=0.12;targetDist=7.2;exploded=false;btnEx.classList.remove('on');current=null;window.__clear3D();});
     function pd(e){dragging=true;autoRotate=false;btnRot.classList.remove('on');var t=e.touches?e.touches[0]:e;px=t.clientX;py=t.clientY;}
-    function pm(e){if(!dragging)return;var t=e.touches?e.touches[0]:e;rotY+=(t.clientX-px)*0.01;rotX=Math.max(-0.4,Math.min(0.9,rotX+(t.clientY-py)*0.01));px=t.clientX;py=t.clientY;if(e.touches)e.preventDefault();}
+    function pm(e){if(!dragging)return;var t=e.touches?e.touches[0]:e;rotY+=(t.clientX-px)*0.01;rotX=Math.max(-0.35,Math.min(0.9,rotX+(t.clientY-py)*0.01));px=t.clientX;py=t.clientY;if(e.touches)e.preventDefault();}
     function pu(){dragging=false;}
     canvas.addEventListener('mousedown',pd);window.addEventListener('mousemove',pm);window.addEventListener('mouseup',pu);
     canvas.addEventListener('touchstart',pd,{passive:true});canvas.addEventListener('touchmove',pm,{passive:false});canvas.addEventListener('touchend',pu);
-    canvas.addEventListener('wheel',function(e){dist=Math.max(4.2,Math.min(9,dist+(e.deltaY>0?0.4:-0.4)));e.preventDefault();},{passive:false});
+    canvas.addEventListener('wheel',function(e){targetDist=Math.max(3.4,Math.min(11,targetDist+(e.deltaY>0?0.5:-0.5)));e.preventDefault();},{passive:false});
 
-    var current=null;
-    window.__highlight3D=function(id){current=id;
-      Object.keys(meshes).forEach(function(key){meshes[key].forEach(function(m){
-        var hit=(key===id); m.material.emissive&&m.material.emissive.setHex(hit?0x0b6e55:0x000000);
-      });});
+    window.__hi3D=function(id){ current=id; focused=true; autoRotate=false; btnRot.classList.remove('on'); targetDist=4.4;
+      Object.keys(parts).forEach(function(key){ parts[key].meshes.forEach(function(m){ if(m.material.emissive)m.material.emissive.setHex(key===id?0x0b6e55:0x000000); }); });
     };
-    window.__clearHi=function(){current=null;Object.keys(meshes).forEach(function(key){meshes[key].forEach(function(m){m.material.emissive&&m.material.emissive.setHex(0x000000);});});};
-    function clearHi(){window.__clearHi();}
+    window.__clear3D=function(){ current=null; focused=false; targetDist=7.2;
+      Object.keys(parts).forEach(function(key){ parts[key].meshes.forEach(function(m){ if(m.material.emissive)m.material.emissive.setHex(0x000000); }); });
+      Array.prototype.forEach.call(listEl.children,function(x){x.classList.remove('on');});
+      Array.prototype.forEach.call(labelsEl.children,function(x){x.classList.remove('on');x.classList.remove('dim');});
+    };
 
+    var tmp=new V3();
+    function updateLabels(W,H){
+      pivot.updateMatrixWorld(true);
+      Array.prototype.forEach.call(labelsEl.children,function(el){
+        var id=el.getAttribute('data-id'); var p=parts[id]; if(!p)return;
+        tmp.copy(p.anchor).addScaledVector(p.dir,expAmt).applyMatrix4(pivot.matrixWorld).project(cam);
+        if(tmp.z>1){el.style.display='none';return;} el.style.display='';
+        el.style.left=((tmp.x*0.5+0.5)*W)+'px'; el.style.top=((-tmp.y*0.5+0.5)*H)+'px';
+      });
+    }
+    var desired=new V3();
     function loop(){requestAnimationFrame(loop);
-      if(autoRotate&&!reduce)rotY+=0.004;
-      pivot.rotation.y=rotY;pivot.rotation.x=rotX;glow+=0.05;
-      Object.keys(meshes).forEach(function(key){var off=window.__explodeMap[key]||0;meshes[key].forEach(function(m){
-        var target=m.userData.baseY+(exploded?off:0); m.position.y+=(target-m.position.y)*0.12;
-        if(m.material.emissive&&current===key)m.material.emissiveIntensity=0.4+0.3*Math.sin(glow);
-      });});
-      cam.position.set(0,2.2,dist);cam.lookAt(0,0.3,0);renderer.render(scene,cam);
+      if(autoRotate&&!reduce)rotY+=0.0035;
+      pivot.rotation.y=rotY; pivot.rotation.x=rotX; glow+=0.05;
+      expAmt+=((exploded?1:0)-expAmt)*0.1;
+      dist+=(targetDist-dist)*0.1;
+      pivot.updateMatrixWorld(true);
+      Object.keys(parts).forEach(function(key){ var p=parts[key];
+        p.meshes.forEach(function(m){ tmp.copy(m.userData.base).addScaledVector(p.dir,expAmt); m.position.copy(tmp);
+          if(m.material.emissive&&current===key)m.material.emissiveIntensity=0.45+0.3*Math.sin(glow); });
+      });
+      if(focused&&current&&parts[current]){ desired.copy(parts[current].anchor).addScaledVector(parts[current].dir,expAmt).applyMatrix4(pivot.matrixWorld); }
+      else { desired.set(0,0.95,0); }
+      camTarget.lerp(desired,0.08);
+      cam.position.set(0,1.9,dist); cam.lookAt(camTarget); renderer.render(scene,cam);
+      updateLabels(canvas.clientWidth||480, canvas.clientHeight||360);
     }
     loop();
   };
